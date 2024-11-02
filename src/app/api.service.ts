@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
 export class ApiService {
 
   private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
-
+  // private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) { }  // Asegúrate de que HttpClient sea parte del constructor
 
   // Método para registrar usuario
@@ -152,4 +152,54 @@ updateDepartamento(id: number, departamento: any): Observable<any> {
 deleteDepartamento(id: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/auth/departamentos/eliminar/${id}`);
 }
+
+ // Crear un nuevo servicio
+ createServicio(servicioData: any): Observable<any> {
+  const url = `${this.baseUrl}/auth/servicios/crear`;
+  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
+  return this.http.post(url, servicioData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
 }
+
+// Obtener un servicio por ID
+getServicioById(id: number): Observable<any> {
+  const url = `${this.baseUrl}/auth/servicios/obtener/${id}`;
+  return this.http.get(url);
+}
+
+// Listar todos los servicios
+getServicios(): Observable<any> {
+  const url = `${this.baseUrl}/auth/servicios`;
+  return this.http.get(url);
+}
+
+// Editar un servicio existente
+updateServicio(id: number, servicioData: any): Observable<any> {
+  const url = `${this.baseUrl}/auth/servicios/editar/${id}`;
+  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
+  return this.http.put(url, servicioData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+}
+
+// Eliminar un servicio por ID
+deleteServicio(id: number): Observable<any> {
+  const url = `${this.baseUrl}/auth/servicios/eliminar/${id}`;
+  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
+  return this.http.delete(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+}
+
+}
+
+

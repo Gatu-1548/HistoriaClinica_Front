@@ -10,7 +10,8 @@ import { ManagePermissionsComponent } from './administrador/manage-permissions/m
 import { ManageEmpleadosComponent } from './personal/manage-empleados/manage-empleados.component';
 import { ManageEspecialidadesComponent } from './registro/manage-especialidades/manage-especialidades.component';
 import { ManageDepartamentosComponent } from './registro/manage-departamentos/manage-departamentos.component';
-
+import { ManageServiciosComponent} from './registro/manage-servicios/manage-servicios.component'
+//import { HorarioMedicoComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -37,11 +38,17 @@ export const routes: Routes = [
       { path: 'personal/empleados', 
         component: ManageEmpleadosComponent 
       },
+      /*{ path: 'configuracion/medicos',
+        component: HorarioMedicoComponent
+      },*/
       { path: 'registro/especialidades', 
         component: ManageEspecialidadesComponent 
       },
       { path: 'registro/departamentos', 
         component: ManageDepartamentosComponent 
+      },
+      { path: 'registro/servicios',
+        component: ManageServiciosComponent
       },
       {
         path: 'welcome',
