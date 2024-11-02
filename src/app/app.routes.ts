@@ -9,7 +9,7 @@ import { ManageRolesComponent } from './administrador/manage-roles/manage-roles.
 import { ManagePermissionsComponent } from './administrador/manage-permissions/manage-permissions.component';
 import { ManageEmpleadosComponent } from './personal/manage-empleados/manage-empleados.component';
 import { ManageEspecialidadesComponent } from './registro/manage-especialidades/manage-especialidades.component';
-
+import { ManageDepartamentosComponent } from './registro/manage-departamentos/manage-departamentos.component';
 
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
@@ -39,6 +39,9 @@ export const routes: Routes = [
       },
       { path: 'registro/especialidades', 
         component: ManageEspecialidadesComponent 
+      },
+      { path: 'registro/departamentos', 
+        component: ManageDepartamentosComponent 
       },
       {
         path: 'welcome',

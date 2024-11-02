@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';  // Asegúrate de importar HttpClient
+import { HttpClient,HttpHeaders  } from '@angular/common/http';  // Asegúrate de importar HttpClient
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 @Injectable({
@@ -81,7 +81,7 @@ updateEspecialidad(id: number, especialidad: any): Observable<any> {
 }
 
 deleteEspecialidad(id: number): Observable<any> {
-  return this.http.delete<any>(`${this.baseUrl}/auth/especialidades/${id}`);
+  return this.http.delete<any>(`${this.baseUrl}/auth/especialidades/eliminar/${id}`);
 }
 
 // Obtener lista de empleados
@@ -120,5 +120,36 @@ getRolePermissions(roleId: number): Observable<any> {
 // Actualizar permisos del rol
 updateRolePermissions(roleId: number, permissionsData: any): Observable<any> {
   return this.http.put(`${this.baseUrl}/auth/roles/editar/${roleId}`, permissionsData);
+}
+
+ // API para listar departamentos
+ getDepartamentos(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/auth/departamentos`);
+}
+
+// API para obtener un departamento por ID
+getDepartamentoById(id: number): Observable<any> {
+  return this.http.get(`${this.baseUrl}/auth/departamentos/${id}`);
+}
+
+// API para crear un nuevo departamento
+createDepartamento(departamentoData: any): Observable<any> {
+  const url = `${this.baseUrl}/auth/departamentos/crear`;
+  const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+  return this.http.post(url, departamentoData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+}
+// API para actualizar un departamento
+updateDepartamento(id: number, departamento: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/auth/departamentos/actualizar/${id}`, departamento);
+}
+
+// API para eliminar un departamento
+deleteDepartamento(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/auth/departamentos/eliminar/${id}`);
 }
 }
