@@ -1,0 +1,43 @@
+<div class="especialidades-container">
+    <h2>Gestionar Especialidades</h2>
+  
+    <!-- Crear nueva especialidad -->
+    <div class="create-especialidad">
+      <input type="text" [(ngModel)]="editEspecialidadName" placeholder="Nueva especialidad" />
+      <button (click)="createEspecialidad()" class="create-btn">Crear Especialidad</button>
+    </div>
+  
+    <!-- Tabla de especialidades -->
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let especialidad of especialidadesPaginadas">
+          <td>{{ especialidad.id }}</td>
+          <td *ngIf="editedEspecialidad?.id !== especialidad.id">{{ especialidad.nombre }}</td>
+          <td *ngIf="editedEspecialidad?.id === especialidad.id">
+            <input [(ngModel)]="editEspecialidadName" type="text" />
+          </td>
+          <td>
+            <!-- Botones de acción para editar/eliminar -->
+            <button *ngIf="editedEspecialidad?.id !== especialidad.id" (click)="editEspecialidad(especialidad)" class="edit-btn">Editar</button>
+            <button *ngIf="editedEspecialidad?.id === especialidad.id" (click)="saveEspecialidad()" class="save-btn">Guardar</button>
+            <button *ngIf="editedEspecialidad?.id === especialidad.id" (click)="cancelEdit()" class="cancel-btn">Cancelar</button>
+            <button *ngIf="editedEspecialidad?.id !== especialidad.id" (click)="deleteEspecialidad(especialidad.id)" class="delete-btn">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Paginación -->
+    <div class="pagination-container">
+      <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+    </div>
+  </div>

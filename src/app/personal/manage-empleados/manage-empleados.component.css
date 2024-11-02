@@ -1,0 +1,30 @@
+.empleados-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    width: 300px;
+  }
+  
+  .nz-table {
+    margin-top: 20px;
+  }
+  
+  .nz-button {
+    margin-right: 5px;
+  }
+  

@@ -1,0 +1,23 @@
+.usuarios-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .nz-input-group {
+    margin-bottom: 20px;
+  }
+  
+  .nz-table {
+    margin-bottom: 20px;
+  }
+  
+  .nz-pagination {
+    text-align: center;
+  }
+  

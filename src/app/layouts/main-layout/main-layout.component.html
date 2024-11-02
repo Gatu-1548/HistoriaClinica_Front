@@ -1,0 +1,103 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar"
+      nzCollapsible
+      nzWidth="256px"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null">
+      <div class="sidebar-logo">
+        <a href="https://ng.ant.design/" target="_blank">
+          <img src="assets/images/electronic_medical_records_logo.jpg" alt="logo">
+          <h1>SSVS</h1>
+        </a>
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-submenu nzOpen nzTitle="Administrador" nzIcon="dashboard">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/administrador/usuarios">Usuarios</a>
+            </li>
+            <li nz-menu-item nzMatchRouter> 
+              <a routerLink="/administrador/roles">Roles</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/administrador/permisos">Permisos</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Registros" nzIcon="file-text">
+            <ul>
+              <li nz-menu-item>
+                <a routerLink="/registro/especialidades">Gestionar Especialidades</a>
+              </li>
+            </ul>
+          </li>
+          <li nz-submenu nzTitle="Personal" nzIcon="team">
+            <ul>
+              <li nz-menu-item>
+                <a routerLink="/personal/empleados">Gestionar Empleados</a>
+              </li>
+            </ul>
+          </li>
+          <li nz-submenu nzTitle="Configuración" nzIcon="setting">
+            <ul>
+              <li nz-menu-item>
+                <a routerLink="/configuracion">Configuración Básica</a>
+              </li>
+            </ul>
+          </li>
+          <li nz-submenu nzTitle="Atenciones Médicas" nzIcon="medicine-box">
+            <ul>
+              <li nz-menu-item>
+                <a routerLink="/atenciones-medicas">Atenciones</a>
+              </li>
+            </ul>
+          </li>
+      </ul>
+    </nz-sider>
+    <nz-layout>
+      <nz-header>
+        <div class="app-header">
+          <div class="left-section">
+            <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+              <span class="trigger"
+                nz-icon
+                [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'">
+              </span>
+            </span>
+          </div>
+          <div class="right-section">
+            <a
+              nz-popover
+              nzPlacement="bottomRight"
+              nzTrigger="click"
+              [nzPopoverOverlayClassName]="'user-menu-popover'"
+              [nzPopoverContent]="menuTemplate"
+              class="user-action"
+            >
+              <nz-avatar nzSize="small" nzSrc="assets/images/modern_user_profile_logo.jpg" nzIcon="user"></nz-avatar>
+              <span class="user-name">Hello {{ userName }} 👋</span>
+            </a>
+            <ng-template #menuTemplate>
+              <ul nz-menu>
+                <li nz-menu-item (click)="goToProfile()">
+                  <span nz-icon nzType="user"></span>
+                  Perfil
+                </li>
+                <li nz-menu-item (click)="logout()">
+                  <span nz-icon nzType="logout"></span>
+                  Cerrar sesión
+                </li>
+              </ul>
+            </ng-template>
+          </div>
+        </div>
+      </nz-header>
+      <nz-content>
+        <div class="inner-content">
+          <router-outlet></router-outlet>
+        </div>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+  

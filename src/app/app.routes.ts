@@ -1,3 +1,53 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { PerfilComponent } from './user/perfil/perfil.component';
+import { ManageUsuariosComponent } from './administrador/manageusuarios/manageusuarios.component';
+import { ManageRolesComponent } from './administrador/manage-roles/manage-roles.component';
+import { ManagePermissionsComponent } from './administrador/manage-permissions/manage-permissions.component';
+import { ManageEmpleadosComponent } from './personal/manage-empleados/manage-empleados.component';
+import { ManageEspecialidadesComponent } from './registro/manage-especialidades/manage-especialidades.component';
 
-export const routes: Routes = [];
+
+export const routes: Routes = [
+  // Ruta para el HomeComponent sin navbar
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  // Rutas que utilizan el MainLayoutComponent (con navbar)
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'perfil',
+        component: PerfilComponent
+      },
+      { path: 'administrador/usuarios', 
+        component: ManageUsuariosComponent 
+      },
+      { path: 'administrador/roles', 
+        component: ManageRolesComponent 
+      },
+      { path: 'administrador/permisos', 
+        component: ManagePermissionsComponent 
+      },
+      { path: 'personal/empleados', 
+        component: ManageEmpleadosComponent 
+      },
+      { path: 'registro/especialidades', 
+        component: ManageEspecialidadesComponent 
+      },
+      {
+        path: 'welcome',
+        loadChildren: () => import('./pages/welcome/welcome.routes').then(m => m.WELCOME_ROUTES)
+      },
+      // Agrega aquí otras rutas que deben mostrar el navbar
+    ]
+  },
+
+  // Manejo de rutas no encontradas
+  { path: '**', redirectTo: '', pathMatch: 'full' }
+];

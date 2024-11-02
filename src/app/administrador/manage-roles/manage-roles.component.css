@@ -1,0 +1,38 @@
+.roles-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .create-role {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .create-role nz-input-group {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .create-btn {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nz-table {
+    margin-bottom: 20px;
+  }
+  
+  .edit-btn,
+  .delete-btn,
+  .save-btn,
+  .cancel-btn {
+    margin-right: 5px;
+  }
+  
