@@ -12,6 +12,7 @@ import { ManageEspecialidadesComponent } from './registro/manage-especialidades/
 import { ManageDepartamentosComponent } from './registro/manage-departamentos/manage-departamentos.component';
 import { ManageServiciosComponent} from './registro/manage-servicios/manage-servicios.component'
 //import { HorarioMedicoComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
+import { ManageBitacoraComponent } from './administrador/manage-bitacora/manage-bitacora.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -49,6 +50,9 @@ export const routes: Routes = [
       },
       { path: 'registro/servicios',
         component: ManageServiciosComponent
+      },
+      { path: 'administrador/bitacora', 
+        component: ManageBitacoraComponent 
       },
       {
         path: 'welcome',

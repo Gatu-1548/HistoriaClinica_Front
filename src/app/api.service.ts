@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders  } from '@angular/common/http';  // Asegúrate de importar HttpClient
-import { Observable } from 'rxjs';
+import { Observable,from } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
 @Injectable({
   providedIn: 'root'
 })
@@ -199,7 +200,46 @@ deleteServicio(id: number): Observable<any> {
     }
   });
 }
+ // Método para obtener los registros de la bitácora
+ getBitacora(): Observable<any> {
+  return this.http.get(`http://localhost:8080/auth/bitacora`);
+}
 
+ // Método para registrar una acción en la bitácora
+ registrarBitacora(accion: string, tablaAfectada: string): Observable<any> {
+  // Llama a obtenerIP y obtenerCIDelUsuario para obtener los valores dinámicos
+  return from(
+    this.obtenerIP().then(ip => {
+      const ci = this.obtenerCIDelUsuario();
+      const bitacora = { ip, ci, accion, tablaAfectada };
+      return this.http.post(`http://localhost:8080/auth/bitacora/registrar`, bitacora).toPromise();
+    })
+  );
+}
+
+async obtenerIP(): Promise<string> {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');  // Servicio público de IP
+    const data = await response.json();
+    return data.ip;  // Retorna la IP obtenida
+  } catch (error) {
+    console.error('Error al obtener la IP:', error);
+    return '255.255.255.255';  // Retorna una IP por defecto si no se puede obtener la real
+  }
+}
+obtenerCIDelUsuario(): string {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const decoded: any = jwtDecode(token);
+      console.log('Contenido del token decodificado:', decoded); // Agrega esto para ver los datos del token
+      return decoded.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
+    } catch (error) {
+      console.error('Error al decodificar el token', error);
+    }
+  }
+  return 'Desconocido';
+}
 }
 
 
