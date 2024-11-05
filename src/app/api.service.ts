@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders  } from '@angular/common/http';  // Asegúrate de importar HttpClient
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Asegúrate de importar HttpClient
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import {
+  HorarioMedico,
+  HorarioMedicoUpdate,
+} from './personal/models/horario-medico.model';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
-  private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
-  // private baseUrl = 'http://localhost:8080';
-  constructor(private http: HttpClient) { }  // Asegúrate de que HttpClient sea parte del constructor
+  //private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
+  private baseUrl = 'http://localhost:8080';
+  constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
   // Método para registrar usuario
   register(userData: any): Observable<any> {
@@ -18,188 +21,268 @@ export class ApiService {
   }
 
   // Método para login
-login(credentials: any): Observable<any> {
-  const url = `${this.baseUrl}/auth/login`;
-  return this.http.post(url, credentials).pipe(
-    tap((response: any) => {
-      // Almacena el token en localStorage si la autenticación es exitosa
-      if (response.token) {
-        localStorage.setItem('token', response.token);
+  login(credentials: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/login`;
+    return this.http.post(url, credentials).pipe(
+      tap((response: any) => {
+        // Almacena el token en localStorage si la autenticación es exitosa
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+      })
+    );
+  }
+
+  // Método para obtener los datos completos del usuario por su username
+  getUserByUsername(username: string): Observable<any> {
+    const url = `${this.baseUrl}/auth/getUserByUsername`;
+    const token = localStorage.getItem('token') || ''; // Usar el token almacenado para autenticación
+    return this.http.post(
+      url,
+      { username },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       }
-    })
-  );
-}
-
-// Método para obtener los datos completos del usuario por su username
-getUserByUsername(username: string): Observable<any> {
-  const url = `${this.baseUrl}/auth/getUserByUsername`;
-  const token = localStorage.getItem('token') || ''; // Usar el token almacenado para autenticación
-  return this.http.post(url, { username }, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-}
-
+    );
+  }
 
   // Método para obtener usuarios
   getUsuarios(): Observable<any> {
     return this.http.get(`${this.baseUrl}/auth/users`);
   }
 
-// Obtener roles
-getRoles(): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/auth/roles`);
+  // Obtener roles
+  getRoles(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/auth/roles`);
+  }
+
+  // Crear un rol
+  createRole(rol: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/roles`, rol);
+  }
+
+  // Editar un rol
+  updateRole(id: number, rol: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/auth/roles/${id}`, rol);
+  }
+
+  // Eliminar un rol
+  deleteRole(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/auth/roles/${id}`);
+  }
+
+  getEspecialidades(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/auth/especialidades`);
+  }
+
+  createEspecialidad(especialidad: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/auth/especialidades/crear`,
+      especialidad
+    );
+  }
+
+  updateEspecialidad(id: number, especialidad: any): Observable<any> {
+    return this.http.put<any>(
+      `${this.baseUrl}/auth/especialidades/${id}`,
+      especialidad
+    );
+  }
+
+  deleteEspecialidad(id: number): Observable<any> {
+    return this.http.delete<any>(
+      `${this.baseUrl}/auth/especialidades/eliminar/${id}`
+    );
+  }
+
+  // Obtener lista de empleados
+  getEmpleados(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/medicos`);
+  }
+
+  // Crear un nuevo empleado
+  createEmpleado(empleadoData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/medicos/crear`, empleadoData);
+  }
+
+  // Editar un empleado
+  updateEmpleado(id: number, empleadoData: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/auth/medicos/editar/${id}?rolId=${empleadoData.rolId}`,
+      empleadoData
+    );
+  }
+
+  // Método para obtener un médico por ID
+  getEmpleadoById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/medicos/${id}`);
+  }
+
+  // Obtener lista de permisos
+  getPermissions(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/permisos`);
+  }
+
+  // Obtener permisos por rol ID
+  getRolePermissions(roleId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/roles/${roleId}`);
+  }
+
+  // Actualizar permisos del rol
+  updateRolePermissions(roleId: number, permissionsData: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/auth/roles/editar/${roleId}`,
+      permissionsData
+    );
+  }
+
+  // API para listar departamentos
+  getDepartamentos(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/departamentos`);
+  }
+
+  // API para obtener un departamento por ID
+  getDepartamentoById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/departamentos/${id}`);
+  }
+
+  // API para crear un nuevo departamento
+  createDepartamento(departamentoData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/departamentos/crear`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.post(url, departamentoData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+  // API para actualizar un departamento
+  updateDepartamento(id: number, departamento: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/auth/departamentos/actualizar/${id}`,
+      departamento
+    );
+  }
+
+  // API para eliminar un departamento
+  deleteDepartamento(id: number): Observable<any> {
+    return this.http.delete(
+      `${this.baseUrl}/auth/departamentos/eliminar/${id}`
+    );
+  }
+
+  // Crear un nuevo servicio
+  createServicio(servicioData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios/crear`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.post(url, servicioData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  // Obtener un servicio por ID
+  getServicioById(id: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios/obtener/${id}`;
+    return this.http.get(url);
+  }
+
+  // Listar todos los servicios
+  getServicios(): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios`;
+    return this.http.get(url);
+  }
+
+  // Editar un servicio existente
+  updateServicio(id: number, servicioData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios/editar/${id}`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.put(url, servicioData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  // Eliminar un servicio por ID
+  deleteServicio(id: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios/eliminar/${id}`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  //-------apis horario --- estan en prueba
+  crearHorarioMedico(horario: HorarioMedico): Observable<HorarioMedico> {
+    const url = `${this.baseUrl}/auth/horarios`;
+    //const token = localStorage.getItem('token') || '';
+    return this.http.post<HorarioMedico>(url, horario, {
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${token}`
+      },
+    });
+  }
+
+  // Obtener todos los Horarios_medico
+  listarHorariosMedicos(): Observable<HorarioMedico[]> {
+    const url = `${this.baseUrl}/auth/horarios`;
+    //const token = localStorage.getItem('token') || '';
+    return this.http.get<HorarioMedico[]>(url, {
+      headers: {
+        //'Authorization': `Bearer ${token}`
+      },
+    });
+  }
+
+  // Obtener un Horario_medico por ID
+  obtenerHorarioMedicoPorId(id: number): Observable<HorarioMedico> {
+    const url = `${this.baseUrl}/auth/horarios/${id}`;
+    const token = localStorage.getItem('token') || '';
+    return this.http.get<HorarioMedico>(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  // Ajuste en ApiService para que acepte `HorarioMedicoUpdate`
+  actualizarHorarioMedico(
+    id: number,
+    horario: HorarioMedicoUpdate
+  ): Observable<HorarioMedico> {
+    const url = `${this.baseUrl}/auth/horarios/${id}`;
+    return this.http.put<HorarioMedico>(url, horario, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  // Eliminar un Horario_medico
+  eliminarHorarioMedico(id: number): Observable<void> {
+    const url = `${this.baseUrl}/auth/horarios/${id}`;
+    // const token = localStorage.getItem('token') || '';
+    return this.http.delete<void>(url, {
+      headers: {
+        //'Authorization': `Bearer ${token}`
+      },
+    });
+  }
+
+  // Obtener los horarios de un médico específico
+  listarHorariosMedico(medicoId: number): Observable<HorarioMedico[]> {
+    const url = `${this.baseUrl}/auth/horarios/medico/${medicoId}`;
+    return this.http.get<HorarioMedico[]>(url);
+  }
 }
-
-// Crear un rol
-createRole(rol: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/auth/roles`, rol);
-}
-
-// Editar un rol
-updateRole(id: number, rol: any): Observable<any> {
-  return this.http.put<any>(`${this.baseUrl}/auth/roles/${id}`, rol);
-}
-
-// Eliminar un rol
-deleteRole(id: number): Observable<any> {
-  return this.http.delete<any>(`${this.baseUrl}/auth/roles/${id}`);
-}
-
-getEspecialidades(): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/auth/especialidades`);
-}
-
-createEspecialidad(especialidad: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/auth/especialidades/crear`, especialidad);
-}
-
-updateEspecialidad(id: number, especialidad: any): Observable<any> {
-  return this.http.put<any>(`${this.baseUrl}/auth/especialidades/${id}`, especialidad);
-}
-
-deleteEspecialidad(id: number): Observable<any> {
-  return this.http.delete<any>(`${this.baseUrl}/auth/especialidades/eliminar/${id}`);
-}
-
-// Obtener lista de empleados
-getEmpleados(): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/medicos`);
-}
-
-// Crear un nuevo empleado
-createEmpleado(empleadoData: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/auth/medicos/crear`, empleadoData);
-}
-
-// Editar un empleado
-updateEmpleado(id: number, empleadoData: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/auth/medicos/editar/${id}?rolId=${empleadoData.rolId}`, empleadoData);
-}
-
-// Método para obtener un médico por ID
-getEmpleadoById(id: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/medicos/${id}`);
-}
-
-
-
-
-// Obtener lista de permisos
-getPermissions(): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/permisos`);
-}
-
-// Obtener permisos por rol ID
-getRolePermissions(roleId: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/roles/${roleId}`);
-}
-
-// Actualizar permisos del rol
-updateRolePermissions(roleId: number, permissionsData: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/auth/roles/editar/${roleId}`, permissionsData);
-}
-
- // API para listar departamentos
- getDepartamentos(): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/departamentos`);
-}
-
-// API para obtener un departamento por ID
-getDepartamentoById(id: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/auth/departamentos/${id}`);
-}
-
-// API para crear un nuevo departamento
-createDepartamento(departamentoData: any): Observable<any> {
-  const url = `${this.baseUrl}/auth/departamentos/crear`;
-  const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
-  return this.http.post(url, departamentoData, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-}
-// API para actualizar un departamento
-updateDepartamento(id: number, departamento: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/auth/departamentos/actualizar/${id}`, departamento);
-}
-
-// API para eliminar un departamento
-deleteDepartamento(id: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/auth/departamentos/eliminar/${id}`);
-}
-
- // Crear un nuevo servicio
- createServicio(servicioData: any): Observable<any> {
-  const url = `${this.baseUrl}/auth/servicios/crear`;
-  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
-  return this.http.post(url, servicioData, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-}
-
-// Obtener un servicio por ID
-getServicioById(id: number): Observable<any> {
-  const url = `${this.baseUrl}/auth/servicios/obtener/${id}`;
-  return this.http.get(url);
-}
-
-// Listar todos los servicios
-getServicios(): Observable<any> {
-  const url = `${this.baseUrl}/auth/servicios`;
-  return this.http.get(url);
-}
-
-// Editar un servicio existente
-updateServicio(id: number, servicioData: any): Observable<any> {
-  const url = `${this.baseUrl}/auth/servicios/editar/${id}`;
-  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
-  return this.http.put(url, servicioData, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  });
-}
-
-// Eliminar un servicio por ID
-deleteServicio(id: number): Observable<any> {
-  const url = `${this.baseUrl}/auth/servicios/eliminar/${id}`;
-  const token = localStorage.getItem('token') || '';  // Token almacenado en localStorage
-  return this.http.delete(url, {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-}
-
-}
-
-
