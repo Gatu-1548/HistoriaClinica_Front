@@ -2,23 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-manage-especialidades',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NzModalModule,
+    NzButtonModule,
+    NzIconModule,
+    NzInputModule
+  ],
   templateUrl: './manage-especialidades.component.html',
   styleUrls: ['./manage-especialidades.component.css']
 })
 export class ManageEspecialidadesComponent implements OnInit {
   especialidades: any[] = [];
   especialidadesPaginadas: any[] = [];
-  searchTerm: string = '';
   currentPage: number = 1;
   pageSize: number = 5;
   totalPages: number = 1;
-  editedEspecialidad: any = null;
-  editEspecialidadName: string = '';
+  isModalVisible = false;
+  modalTitle = 'Crear Especialidad';
+  editEspecialidadData: any = { nombre: '' };
 
   constructor(private apiService: ApiService) {}
 
@@ -33,11 +44,53 @@ export class ManageEspecialidadesComponent implements OnInit {
     });
   }
 
-  filterEspecialidades() {
-    const filtered = this.especialidades.filter(especialidad =>
-      especialidad.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    this.paginateEspecialidades(filtered);
+  openCreateModal() {
+    this.modalTitle = 'Crear Especialidad';
+    this.editEspecialidadData = { nombre: '' };
+    this.isModalVisible = true;
+  }
+
+  openEditModal(especialidad: any) {
+    this.modalTitle = 'Editar Especialidad';
+    this.editEspecialidadData = { ...especialidad };
+    this.isModalVisible = true;
+  }
+
+  handleOk() {
+    if (this.modalTitle === 'Crear Especialidad') {
+      this.createEspecialidad();
+    } else {
+      this.saveEspecialidad();
+    }
+    this.isModalVisible = false;
+  }
+
+  handleCancel() {
+    this.isModalVisible = false;
+  }
+
+  createEspecialidad() {
+    this.apiService.createEspecialidad(this.editEspecialidadData).subscribe(() => {
+      this.loadEspecialidades();
+    });
+  }
+
+  saveEspecialidad() {
+    this.apiService.updateEspecialidad(this.editEspecialidadData.id, this.editEspecialidadData).subscribe(() => {
+      this.loadEspecialidades();
+    });
+  }
+
+  confirmDelete(id: number) {
+    if (confirm('¿Estás seguro de eliminar esta especialidad?')) {
+      this.deleteEspecialidad(id);
+    }
+  }
+
+  deleteEspecialidad(id: number) {
+    this.apiService.deleteEspecialidad(id).subscribe(() => {
+      this.loadEspecialidades();
+    });
   }
 
   paginateEspecialidades(data = this.especialidades) {
@@ -58,39 +111,5 @@ export class ManageEspecialidadesComponent implements OnInit {
       this.currentPage++;
       this.paginateEspecialidades();
     }
-  }
-
-  createEspecialidad() {
-    const newEspecialidad = { nombre: this.editEspecialidadName };
-    this.apiService.createEspecialidad(newEspecialidad).subscribe(() => {
-      this.loadEspecialidades();
-      this.editEspecialidadName = '';
-    });
-  }
-
-  editEspecialidad(especialidad: any) {
-    this.editedEspecialidad = especialidad;
-    this.editEspecialidadName = especialidad.nombre;
-  }
-
-  saveEspecialidad() {
-    if (this.editedEspecialidad) {
-      const updatedEspecialidad = { nombre: this.editEspecialidadName };
-      this.apiService.updateEspecialidad(this.editedEspecialidad.id, updatedEspecialidad).subscribe(() => {
-        this.loadEspecialidades();
-        this.cancelEdit();
-      });
-    }
-  }
-
-  cancelEdit() {
-    this.editedEspecialidad = null;
-    this.editEspecialidadName = '';
-  }
-
-  deleteEspecialidad(id: number) {
-    this.apiService.deleteEspecialidad(id).subscribe(() => {
-      this.loadEspecialidades();
-    });
   }
 }
