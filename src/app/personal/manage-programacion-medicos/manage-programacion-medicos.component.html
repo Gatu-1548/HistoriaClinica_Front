@@ -8,11 +8,11 @@
       [(ngModel)]="selectedMedicoId"
       (ngModelChange)="loadHorariosPorMedicoYFecha()"
       nzPlaceHolder="Selecciona un médico"
-      style="width: 100%;"
+      style="width: 100%"
     >
-    <!-- Opción para ver todos los horarios -->
-    <nz-option [nzValue]="null" nzLabel="Ver todos"></nz-option>
-    
+      <!-- Opción para ver todos los horarios -->
+      <nz-option [nzValue]="null" nzLabel="Ver todos"></nz-option>
+
       <nz-option
         *ngFor="let medico of medicos"
         [nzValue]="medico.id"
@@ -32,10 +32,10 @@
     />
   </div>
 
-    <!-- Indicador de carga -->
-    <div *ngIf="isLoading" class="loading-indicator">
-      <p>Cargando horarios...</p>
-    </div>
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    <p>Cargando horarios...</p>
+  </div>
 
   <!-- Botón para abrir el modal de creación/edición de horario -->
   <button nz-button nzType="primary" (click)="openCreateModal()">
@@ -65,14 +65,19 @@
         <td>{{ horario.horaFin }}</td>
         <td>{{ horario.cupoTotal }}</td>
         <td>{{ horario.cupoDisponible }}</td>
-        <td>{{ horario.medico.nombre || 'N/A' }}</td>
-        <td>{{ horario.servicio.nombre || 'N/A' }}</td>
+        <td>{{ horario.medico.nombre || "N/A" }}</td>
+        <td>{{ horario.servicio.nombre || "N/A" }}</td>
         <td>
           <!-- Botones de acción con iconos -->
           <button nz-button nzType="default" (click)="openEditModal(horario)">
             <span nz-icon nzType="edit"></span>
           </button>
-          <button nz-button nzType="default" nzDanger (click)="confirmDelete(horario.id!)">
+          <button
+            nz-button
+            nzType="default"
+            nzDanger
+            (click)="confirmDelete(horario.id!)"
+          >
             <span nz-icon nzType="delete"></span>
           </button>
         </td>
@@ -87,9 +92,17 @@
 
   <!-- Paginación -->
   <div class="pagination-container" *ngIf="totalPages > 1">
-    <button nz-button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+    <button nz-button (click)="previousPage()" [disabled]="currentPage === 1">
+      Anterior
+    </button>
     <span>Página {{ currentPage }} de {{ totalPages }}</span>
-    <button nz-button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+    <button
+      nz-button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Siguiente
+    </button>
   </div>
 
   <!-- Modal de Crear/Editar Horario Médico -->
@@ -109,6 +122,7 @@
             [(ngModel)]="editHorarioData.fecha"
             name="fecha"
             required
+            [disabled]="isEditMode"
           />
         </div>
 
@@ -120,6 +134,7 @@
             [(ngModel)]="editHorarioData.horaInicio"
             name="horaInicio"
             required
+            [disabled]="isEditMode"
           />
         </div>
 
@@ -131,6 +146,7 @@
             [(ngModel)]="editHorarioData.horaFin"
             name="horaFin"
             required
+            [disabled]="isEditMode"
           />
         </div>
 
@@ -141,7 +157,8 @@
             name="medicoId"
             nzPlaceHolder="Selecciona un médico"
             required
-            style="width: 100%;"
+            style="width: 100%"
+         
           >
             <nz-option
               *ngFor="let medico of medicos"
@@ -156,7 +173,8 @@
             name="servicioId"
             nzPlaceHolder="Selecciona un servicio"
             required
-            style="width: 100%;"
+            style="width: 100%"
+            [disabled]="isEditMode"
           >
             <nz-option
               *ngFor="let servicio of servicios"
@@ -177,7 +195,8 @@
             required
           />
           <small class="form-text text-muted">
-            Ingresa 0 para crear un solo bloque desde la hora de inicio hasta la hora de fin.
+            Ingresa 0 para crear un solo bloque desde la hora de inicio hasta la
+            hora de fin.
           </small>
         </div>
 
@@ -187,6 +206,7 @@
           class="mt-2"
           (click)="generarBloques(horarioForm)"
           type="button"
+          *ngIf="!isEditMode"
         >
           <span nz-icon nzType="clock-circle"></span> Generar Bloques
         </button>
@@ -209,7 +229,7 @@
                   <input
                     type="checkbox"
                     [(ngModel)]="editHorarioData.bloques[i].disponibilidad"
-                    name="disponibilidad{{i}}"
+                    name="disponibilidad{{ i }}"
                     (change)="recalcularCupoDisponible()"
                   />
                 </td>
@@ -217,7 +237,8 @@
             </tbody>
           </table>
           <p>Cupo Total: {{ editHorarioData.cupoTotal }}</p>
-          <p>Cupo Disponible: {{ editHorarioData.cupoDisponible }}</p> <!-- Mostrar cupo disponible -->
+          <p>Cupo Disponible: {{ editHorarioData.cupoDisponible }}</p>
+          <!-- Mostrar cupo disponible -->
         </div>
       </form>
     </div>

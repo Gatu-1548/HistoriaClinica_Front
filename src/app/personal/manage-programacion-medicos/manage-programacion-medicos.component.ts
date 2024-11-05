@@ -37,6 +37,7 @@ export class ManageProgramacionMedicosComponent implements OnInit {
   selectedMedicoId: number | null = null;
   isLoading: boolean = false;
   selectedDate: string | null = null; // Nueva propiedad para la fecha seleccionada
+  isEditMode: boolean = false;
   currentPage: number = 1;
   pageSize: number = 5;
   totalPages: number = 1;
@@ -129,12 +130,11 @@ export class ManageProgramacionMedicosComponent implements OnInit {
   }
 
   loadHorariosPorMedicoYFecha() {
-
     if (!this.selectedMedicoId) {
       this.isLoading = true;
       this.apiService.listarHorariosMedicos().subscribe(
         (data: any[]) => {
-          this.horarios = data.map(horario => ({
+          this.horarios = data.map((horario) => ({
             ...horario,
             medico: {
               ...horario.medico,
@@ -168,7 +168,7 @@ export class ManageProgramacionMedicosComponent implements OnInit {
               },
             }));
           this.paginateHorarios();
-          this.isLoading = false; 
+          this.isLoading = false;
         },
         (error) => {
           console.error(error);
@@ -224,12 +224,15 @@ export class ManageProgramacionMedicosComponent implements OnInit {
       bloques: [],
     };
     this.isModalVisible = true;
+    this.isEditMode = false; // Indica que estamos en modo de creación
   }
+  
 
   openEditModal(horario: HorarioMedico) {
     this.modalTitle = 'Editar Horario Médico';
     this.editHorarioData = { ...horario };
     this.isModalVisible = true;
+    this.isEditMode = true; // Indica que estamos en modo de edición
   }
 
   handleOk() {
