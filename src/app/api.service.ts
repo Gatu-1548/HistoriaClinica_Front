@@ -19,9 +19,9 @@ import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
 })
 export class ApiService {
 
-  /* desde aqui empieza*/
-  //private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
-  private baseUrl = 'http://localhost:8080';
+  
+  private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
+  //private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
   // Método para registrar usuario
@@ -344,7 +344,11 @@ export class ApiService {
   }
 
   cancelarCita(id: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/auth/citas/cancelar/${id}`, {});
+    return this.http.put<void>(`${this.baseUrl}/cancelar/${id}`, {});
   }
-  /*aqui termina*/
+
+
+
+
+
 }
