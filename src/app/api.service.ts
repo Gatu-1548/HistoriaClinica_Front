@@ -228,12 +228,11 @@ async obtenerIP(): Promise<string> {
   }
 }
 obtenerCIDelUsuario(): string {
-  const token = localStorage.getItem('token');
-  if (token) {
+  const user = JSON.parse(sessionStorage.getItem('user')||'{}');
+  if (user) {
     try {
-      const decoded: any = jwtDecode(token);
-      console.log('Contenido del token decodificado:', decoded); // Agrega esto para ver los datos del token
-      return decoded.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
+      console.log('Contenido del token decodificado:', user); // Agrega esto para ver los datos del token
+      return user.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
     } catch (error) {
       console.error('Error al decodificar el token', error);
     }
