@@ -24,7 +24,7 @@ export class ApiService {
   //private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
-  // Método para registrar usuario
+  // Método para registrar usuarioGIT 
   register(userData: any): Observable<any> {
     const url = `${this.baseUrl}/auth/register`;
     return this.http.post(url, userData);
