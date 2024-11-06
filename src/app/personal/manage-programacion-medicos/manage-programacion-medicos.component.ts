@@ -6,7 +6,7 @@ import {
   Medico,
   HorarioMedicoUpdate,
   Servicio,
-} from '../models/horario-medico.model';
+} from '../../models/horario-medico.model';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';

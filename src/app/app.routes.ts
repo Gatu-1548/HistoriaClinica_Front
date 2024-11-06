@@ -13,6 +13,7 @@ import { ManageDepartamentosComponent } from './registro/manage-departamentos/ma
 import { ManageServiciosComponent} from './registro/manage-servicios/manage-servicios.component'
 import { ManageProgramacionMedicosComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
 import { ManageBitacoraComponent } from './administrador/manage-bitacora/manage-bitacora.component';
+import { ManageCitasComponent } from './atenciones/manage-citas/manage-citas.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -53,6 +54,10 @@ export const routes: Routes = [
       },
       { path: 'administrador/bitacora', 
         component: ManageBitacoraComponent 
+      },
+      {
+        path: 'citas-medicas',
+        component: ManageCitasComponent
       },
       {
         path: 'welcome',

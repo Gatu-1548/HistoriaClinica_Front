@@ -6,7 +6,12 @@ import { tap } from 'rxjs/operators';
 import {
   HorarioMedico,
   HorarioMedicoUpdate,
-} from './personal/models/horario-medico.model';
+} from './models/horario-medico.model';
+
+
+import {
+  Cita
+} from './models/citas.model';
 import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
 
 @Injectable({
@@ -291,7 +296,7 @@ export class ApiService {
 
   // Método para obtener los registros de la bitácora
   getBitacora(): Observable<any> {
-    return this.http.get(`http://localhost:8080/auth/bitacora`);
+    return this.http.get(`${this.baseUrl}/auth/bitacora`);
   }
 
   // Método para registrar una acción en la bitácora
@@ -302,7 +307,7 @@ export class ApiService {
         const ci = this.obtenerCIDelUsuario();
         const bitacora = { ip, ci, accion, tablaAfectada };
         return this.http
-          .post(`http://localhost:8080/auth/bitacora/registrar`, bitacora)
+          .post(`${this.baseUrl}/auth/bitacora/registrar`, bitacora)
           .toPromise();
       })
     );
@@ -330,5 +335,13 @@ export class ApiService {
       }
     }
     return 'Desconocido';
+  }
+
+  getCitas(): Observable<Cita[]> {
+    return this.http.get<Cita[]>(`${this.baseUrl}/auth/citas`);
+  }
+
+  cancelarCita(id: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/auth/citas/cancelar/${id}`, {});
   }
 }

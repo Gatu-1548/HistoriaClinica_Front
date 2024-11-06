@@ -11,7 +11,7 @@ import { filter } from 'rxjs/operators';  // Importar operador filter de RxJS
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, NzIconModule, NzLayoutModule, NzMenuModule, FormsModule],
+  imports: [CommonModule, RouterLink, RouterOutlet, NzIconModule, NzLayoutModule, NzMenuModule, FormsModule,],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
