@@ -202,7 +202,7 @@ deleteServicio(id: number): Observable<any> {
 }
  // Método para obtener los registros de la bitácora
  getBitacora(): Observable<any> {
-  return this.http.get(`http://localhost:8080/auth/bitacora`);
+  return this.http.get(`${this.baseUrl}/auth/bitacora`);
 }
 
  // Método para registrar una acción en la bitácora
@@ -212,7 +212,7 @@ deleteServicio(id: number): Observable<any> {
     this.obtenerIP().then(ip => {
       const ci = this.obtenerCIDelUsuario();
       const bitacora = { ip, ci, accion, tablaAfectada };
-      return this.http.post(`http://localhost:8080/auth/bitacora/registrar`, bitacora).toPromise();
+      return this.http.post(`${this.baseUrl}/auth/bitacora/registrar`, bitacora).toPromise();
     })
   );
 }
@@ -228,12 +228,12 @@ async obtenerIP(): Promise<string> {
   }
 }
 obtenerCIDelUsuario(): string {
-  const token = localStorage.getItem('token');
+  const token = JSON.parse(sessionStorage.getItem('user')|| '{}');
   if (token) {
     try {
-      const decoded: any = jwtDecode(token);
-      console.log('Contenido del token decodificado:', decoded); // Agrega esto para ver los datos del token
-      return decoded.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
+      
+      console.log('Contenido del token decodificado:', token); // Agrega esto para ver los datos del token
+      return token.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
     } catch (error) {
       console.error('Error al decodificar el token', error);
     }
