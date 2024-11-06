@@ -1,0 +1,59 @@
+/* src/app/components/manage-horarios-medicos/manage-horarios-medicos.component.css */
+
+.horarios-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .horarios-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  button[nz-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+  }
+  
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th,
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .mt-2 {
+    margin-top: 10px;
+  }
+  
+  .mt-4 {
+    margin-top: 20px;
+  }
+
+  .loading-indicator {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    color: #1890ff; /* O cualquier color que prefieras */
+  }
+  

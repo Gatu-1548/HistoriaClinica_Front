@@ -11,7 +11,7 @@ import { ManageEmpleadosComponent } from './personal/manage-empleados/manage-emp
 import { ManageEspecialidadesComponent } from './registro/manage-especialidades/manage-especialidades.component';
 import { ManageDepartamentosComponent } from './registro/manage-departamentos/manage-departamentos.component';
 import { ManageServiciosComponent} from './registro/manage-servicios/manage-servicios.component'
-//import { HorarioMedicoComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
+import { ManageProgramacionMedicosComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
 import { ManageBitacoraComponent } from './administrador/manage-bitacora/manage-bitacora.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
@@ -39,9 +39,9 @@ export const routes: Routes = [
       { path: 'personal/empleados', 
         component: ManageEmpleadosComponent 
       },
-      /*{ path: 'configuracion/medicos',
-        component: HorarioMedicoComponent
-      },*/
+      { path: 'configuracion/medicos',
+        component: ManageProgramacionMedicosComponent
+      },
       { path: 'registro/especialidades', 
         component: ManageEspecialidadesComponent 
       },
