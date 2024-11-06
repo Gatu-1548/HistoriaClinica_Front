@@ -1,0 +1,50 @@
+/* src/app/components/manage-citas/manage-citas.component.css */
+
+.citas-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.citas-container h2 {
+    margin-bottom: 20px;
+}
+
+.filters-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+button[nz-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+}
+
+.table-container {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.loading-indicator {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    color: #1890ff;
+}
