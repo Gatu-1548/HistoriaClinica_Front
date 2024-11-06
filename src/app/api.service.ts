@@ -8,23 +8,18 @@ import {
   HorarioMedicoUpdate,
 } from './models/horario-medico.model';
 
+import { Cita } from './models/citas.model';
 
-import {
-  Cita
-} from './models/citas.model';
 import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
-
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-
-  
-  private baseUrl = 'https://backend-historialclinico.onrender.com';  // URL base de tu backend
-  //private baseUrl = 'http://localhost:8080';
+  //private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
+  private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
-  // Método para registrar usuarioGIT 
+  // Método para registrar usuarioGIT
   register(userData: any): Observable<any> {
     const url = `${this.baseUrl}/auth/register`;
     return this.http.post(url, userData);
@@ -159,44 +154,6 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/auth/departamentos/${id}`);
   }
 
-  // API para crear un nuevo departamento
-  createDepartamento(departamentoData: any): Observable<any> {
-    const url = `${this.baseUrl}/auth/departamentos/crear`;
-    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
-    return this.http.post(url, departamentoData, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-  // API para actualizar un departamento
-  updateDepartamento(id: number, departamento: any): Observable<any> {
-    return this.http.put(
-      `${this.baseUrl}/auth/departamentos/actualizar/${id}`,
-      departamento
-    );
-  }
-
-  // API para eliminar un departamento
-  deleteDepartamento(id: number): Observable<any> {
-    return this.http.delete(
-      `${this.baseUrl}/auth/departamentos/eliminar/${id}`
-    );
-  }
-
-  // Crear un nuevo servicio
-  createServicio(servicioData: any): Observable<any> {
-    const url = `${this.baseUrl}/auth/servicios/crear`;
-    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
-    return this.http.post(url, servicioData, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-
   // Obtener un servicio por ID
   getServicioById(id: number): Observable<any> {
     const url = `${this.baseUrl}/auth/servicios/obtener/${id}`;
@@ -325,19 +282,46 @@ export class ApiService {
       return '255.255.255.255'; // Retorna una IP por defecto si no se puede obtener la real
     }
   }
-  obtenerCIDelUsuario(): string {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        console.log('Contenido del token decodificado:', decoded); // Agrega esto para ver los datos del token
-        return decoded.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
-      } catch (error) {
-        console.error('Error al decodificar el token', error);
-      }
-    }
-    return 'Desconocido';
+
+  // API para crear un nuevo departamento
+  createDepartamento(departamentoData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/departamentos/crear`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.post(url, departamentoData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
+
+  // API para actualizar un departamento
+  updateDepartamento(id: number, departamento: any): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/auth/departamentos/actualizar/${id}`,
+      departamento
+    );
+  }
+
+  // API para eliminar un departamento
+  deleteDepartamento(id: number): Observable<any> {
+    return this.http.delete(
+      `${this.baseUrl}/auth/departamentos/eliminar/${id}`
+    );
+  }
+
+  // Crear un nuevo servicio
+  createServicio(servicioData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/servicios/crear`;
+    const token = localStorage.getItem('token') || ''; // Token almacenado en localStorage
+    return this.http.post(url, servicioData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
 
   getCitas(): Observable<Cita[]> {
     return this.http.get<Cita[]>(`${this.baseUrl}/auth/citas`);
@@ -347,8 +331,16 @@ export class ApiService {
     return this.http.put<void>(`${this.baseUrl}/cancelar/${id}`, {});
   }
 
-
-
-
-
+  obtenerCIDelUsuario(): string {
+    const token = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (token) {
+      try {
+        console.log('Contenido del token decodificado:', token); // Agrega esto para ver los datos del token
+        return token.ci || 'Desconocido'; // Cambia 'ci' por el campo correcto después de verificar
+      } catch (error) {
+        console.error('Error al decodificar el token', error);
+      }
+    }
+    return 'Desconocido';
+  }
 }
