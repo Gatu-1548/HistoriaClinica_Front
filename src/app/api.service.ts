@@ -343,4 +343,14 @@ export class ApiService {
     }
     return 'Desconocido';
   }
+
+   // Método para obtener la lista de triaje
+   getTriageList(): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8080/auth/triaje`);
+  }
+
+  // Método para registrar un nuevo triaje
+  registerTriage(data: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:8080/auth/triaje/crear`, data);
+  }
 }

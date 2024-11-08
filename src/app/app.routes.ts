@@ -14,6 +14,8 @@ import { ManageServiciosComponent} from './registro/manage-servicios/manage-serv
 import { ManageProgramacionMedicosComponent } from './personal/manage-programacion-medicos/manage-programacion-medicos.component';
 import { ManageBitacoraComponent } from './administrador/manage-bitacora/manage-bitacora.component';
 import { ManageCitasComponent } from './atenciones/manage-citas/manage-citas.component';
+import { ManagePacientesComponent } from './atenciones/manage-pacientes/manage-pacientes.component';
+import { TriageComponent } from './atenciones/triage/triage.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -58,6 +60,14 @@ export const routes: Routes = [
       {
         path: 'citas-medicas',
         component: ManageCitasComponent
+      },
+      {
+        path: 'atenciones/paciente',
+        component: ManagePacientesComponent
+      },
+      {
+        path: 'atenciones/triaje',
+        component: TriageComponent
       },
       {
         path: 'welcome',
