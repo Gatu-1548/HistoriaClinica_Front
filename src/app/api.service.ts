@@ -349,7 +349,7 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/auth/triaje`);
   }
 
-  // Método para registrar un nuevo triaje
+  // Método para registrar un nuevo triaje 
   registerTriage(data: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/auth/triaje/crear`, data);
   }
