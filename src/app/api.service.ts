@@ -353,4 +353,45 @@ export class ApiService {
   registerTriage(data: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/auth/triaje/crear`, data);
   }
+
+    // Método para obtener todos los antecedentes
+    getAllAntecedentes(): Observable<any> {
+      const url = `${this.baseUrl}/auth/antecedente`;
+      return this.http.get(url);
+    }
+  
+    // Método para obtener un antecedente por ID
+    getAntecedenteById(id: number): Observable<any> {
+      const url = `${this.baseUrl}/auth/antecedente/${id}`;
+      return this.http.get(url);
+    }
+  
+    // Método para crear un nuevo antecedente
+    createAntecedente(antecedenteData: any): Observable<any> {
+      const url = `${this.baseUrl}/auth/antecedente/crear`;
+      return this.http.post(url, antecedenteData);
+    }
+  
+    // Método para actualizar un antecedente
+    updateAntecedente(id: number, antecedenteData: any): Observable<any> {
+      const url = `${this.baseUrl}/auth/antecedente/editar/${id}`;
+      return this.http.put(url, antecedenteData);
+    }
+  
+    // Método para eliminar un antecedente
+    deleteAntecedente(id: number): Observable<any> {
+      const url = `${this.baseUrl}/auth/antecedente/eliminar/${id}`;
+      return this.http.delete(url);
+    }
+  
+    getAntecedentesByUserId(userId: number): Observable<any> {
+      const url = `http://localhost:8080/auth/antecedente/usuario/${userId}`;
+      const token = localStorage.getItem('token') || ''; // Obtén el token del localStorage
+      return this.http.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en este formato
+        },
+      });
+    }
 }

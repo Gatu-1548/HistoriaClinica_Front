@@ -7,11 +7,12 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';  // Importar el servicio ApiService
 import { filter } from 'rxjs/operators';  // Importar operador filter de RxJS
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, NzIconModule, NzLayoutModule, NzMenuModule, FormsModule,],
+  imports: [CommonModule, RouterLink, RouterOutlet, NzIconModule, NzLayoutModule, NzMenuModule, FormsModule,NzModalModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
