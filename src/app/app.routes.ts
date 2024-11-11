@@ -16,6 +16,8 @@ import { ManageBitacoraComponent } from './administrador/manage-bitacora/manage-
 import { ManageCitasComponent } from './atenciones/manage-citas/manage-citas.component';
 import { ManagePacientesComponent } from './atenciones/manage-pacientes/manage-pacientes.component';
 import { TriageComponent } from './atenciones/triage/triage.component';
+import { ManageHistorialClinicoComponent } from './atenciones/manage-historial-clinico/manage-historial-clinico.component';
+import { VerAntecedentesComponent } from './atenciones/ver-antecedentes/ver-antecedentes.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -68,6 +70,14 @@ export const routes: Routes = [
       {
         path: 'atenciones/triaje',
         component: TriageComponent
+      },
+      {
+        path: 'atenciones/Historial-Paciente',
+        component: ManageHistorialClinicoComponent
+      },
+      {
+        path: 'atenciones/Ver_antecedente/:userId',
+        component: VerAntecedentesComponent
       },
       {
         path: 'welcome',
