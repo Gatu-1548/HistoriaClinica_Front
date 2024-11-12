@@ -158,7 +158,6 @@
             nzPlaceHolder="Selecciona un médico"
             required
             style="width: 100%"
-         
           >
             <nz-option
               *ngFor="let medico of medicos"
@@ -193,6 +192,7 @@
             name="duracionCitaMin"
             min="0"
             required
+            [disabled]="isEditMode"
           />
           <small class="form-text text-muted">
             Ingresa 0 para crear un solo bloque desde la hora de inicio hasta la
@@ -219,6 +219,7 @@
                 <th>Hora Inicio</th>
                 <th>Hora Fin</th>
                 <th>Disponibilidad</th>
+                <th>Cita Agendada</th>
               </tr>
             </thead>
             <tbody>
@@ -230,8 +231,15 @@
                     type="checkbox"
                     [(ngModel)]="editHorarioData.bloques[i].disponibilidad"
                     name="disponibilidad{{ i }}"
+                    [disabled]="!!bloque.citaId" 
                     (change)="recalcularCupoDisponible()"
                   />
+                </td>
+                
+                <td>
+                  <!-- Mostrar el ID de la cita si existe -->
+                  <span *ngIf="bloque.citaId">ID: {{ bloque.citaId }}</span>
+                  <span *ngIf="!bloque.citaId">No hay cita</span>
                 </td>
               </tr>
             </tbody>

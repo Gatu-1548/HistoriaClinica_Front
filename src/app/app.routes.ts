@@ -18,6 +18,8 @@ import { ManagePacientesComponent } from './atenciones/manage-pacientes/manage-p
 import { TriageComponent } from './atenciones/triage/triage.component';
 import { ManageHistorialClinicoComponent } from './atenciones/manage-historial-clinico/manage-historial-clinico.component';
 import { VerAntecedentesComponent } from './atenciones/ver-antecedentes/ver-antecedentes.component';
+
+import { ManageAtencionesMedicoComponent } from './atenciones/manage-atenciones-medico/manage-atenciones-medico.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -78,6 +80,10 @@ export const routes: Routes = [
       {
         path: 'atenciones/Ver_antecedente/:userId',
         component: VerAntecedentesComponent
+      },
+      {
+        path: 'atenciones/atencines_realizara_medico',
+        component:ManageAtencionesMedicoComponent 
       },
       {
         path: 'welcome',

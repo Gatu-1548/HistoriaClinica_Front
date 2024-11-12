@@ -54,6 +54,11 @@ export class ApiService {
     );
   }
 
+  getUserByCI(ci: string): Observable<any> {
+    const url = `${this.baseUrl}/auth/users/ci/${ci}`;
+    return this.http.get(url);
+  }
+
   // Método para obtener usuarios
   getUsuarios(): Observable<any> {
     return this.http.get(`${this.baseUrl}/auth/users`);
@@ -109,16 +114,25 @@ export class ApiService {
   }
 
   // Crear un nuevo empleado
-  createEmpleado(empleadoData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/medicos/crear`, empleadoData);
+  createEmpleado(empleadoData: any,id: number, rolId: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/medicos/crear/${id}?rolId=${rolId}`;
+    return this.http.post(url, empleadoData);
   }
 
   // Editar un empleado
-  updateEmpleado(id: number, empleadoData: any): Observable<any> {
-    return this.http.put(
-      `${this.baseUrl}/auth/medicos/editar/${id}?rolId=${empleadoData.rolId}`,
-      empleadoData
-    );
+  // updateEmpleado(id: number, empleadoData: any): Observable<any> {
+  //   return this.http.put(
+  //     `${this.baseUrl}/auth/medicos/editar/${id}?rolId=${empleadoData.rolId}`,
+  //     empleadoData
+  //   );
+  // }
+  updateEmpleado(
+    id: number,
+    empleadoData: any,
+    rolId: number
+  ): Observable<any> {
+    const url = `${this.baseUrl}/auth/medicos/editar/${id}?rolId=${rolId}`;
+    return this.http.put(url, empleadoData);
   }
 
   // Método para obtener un médico por ID
@@ -322,13 +336,12 @@ export class ApiService {
     });
   }
 
-
   getCitas(): Observable<Cita[]> {
     return this.http.get<Cita[]>(`${this.baseUrl}/auth/citas`);
   }
 
   cancelarCita(id: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/cancelar/${id}`, {});
+    return this.http.put<void>(`${this.baseUrl}/auth/citas/cancelar/${id}`, {});
   }
 
   obtenerCIDelUsuario(): string {
@@ -344,54 +357,75 @@ export class ApiService {
     return 'Desconocido';
   }
 
-   // Método para obtener la lista de triaje
-   getTriageList(): Observable<any[]> {
+  // Método para obtener la lista de triaje
+  getTriageList(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/auth/triaje`);
   }
 
-  // Método para registrar un nuevo triaje 
+  // Método para registrar un nuevo triaje
   registerTriage(data: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/auth/triaje/crear`, data);
   }
 
-    // Método para obtener todos los antecedentes
-    getAllAntecedentes(): Observable<any> {
-      const url = `${this.baseUrl}/auth/antecedente`;
-      return this.http.get(url);
-    }
-  
-    // Método para obtener un antecedente por ID
-    getAntecedenteById(id: number): Observable<any> {
-      const url = `${this.baseUrl}/auth/antecedente/${id}`;
-      return this.http.get(url);
-    }
-  
-    // Método para crear un nuevo antecedente
-    createAntecedente(antecedenteData: any): Observable<any> {
-      const url = `${this.baseUrl}/auth/antecedente/crear`;
-      return this.http.post(url, antecedenteData);
-    }
-  
-    // Método para actualizar un antecedente
-    updateAntecedente(id: number, antecedenteData: any): Observable<any> {
-      const url = `${this.baseUrl}/auth/antecedente/editar/${id}`;
-      return this.http.put(url, antecedenteData);
-    }
-  
-    // Método para eliminar un antecedente
-    deleteAntecedente(id: number): Observable<any> {
-      const url = `${this.baseUrl}/auth/antecedente/eliminar/${id}`;
-      return this.http.delete(url);
-    }
-  
-    getAntecedentesByUserId(userId: number): Observable<any> {
-      const url = `http://localhost:8080/auth/antecedente/usuario/${userId}`;
-      const token = localStorage.getItem('token') || ''; // Obtén el token del localStorage
-      return this.http.get(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en este formato
-        },
-      });
-    }
+  // Método para obtener todos los antecedentes
+  getAllAntecedentes(): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente`;
+    return this.http.get(url);
+  }
+
+  // Método para obtener un antecedente por ID
+  getAntecedenteById(id: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente/${id}`;
+    return this.http.get(url);
+  }
+
+  // Método para crear un nuevo antecedente
+  createAntecedente(antecedenteData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente/crear`;
+    return this.http.post(url, antecedenteData);
+  }
+
+  // Método para actualizar un antecedente
+  updateAntecedente(id: number, antecedenteData: any): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente/editar/${id}`;
+    return this.http.put(url, antecedenteData);
+  }
+
+  // Método para eliminar un antecedente
+  deleteAntecedente(id: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente/eliminar/${id}`;
+    return this.http.delete(url);
+  }
+
+  getAntecedentesByUserId(userId: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/antecedente/usuario/${userId}`;
+    const token = localStorage.getItem('token') || ''; // Obtén el token del localStorage
+    return this.http.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en este formato
+      },
+    });
+  }
+
+  actualizarUsuario(userId: number, usuario: any) {
+    const userUpdateData = {
+      nombre: usuario.nombre,
+      apellido_paterno: usuario.apellido_paterno,
+      apellido_materno: usuario.apellido_materno,
+      fecha_nacimiento: usuario.fecha_nacimiento,
+      telefono: usuario.telefono,
+      genero: usuario.genero,
+      ci: usuario.ci,
+      username: usuario.username,
+    };
+    return this.http.put<any>(
+      `${this.baseUrl}/auth/users/${userId}/update`,
+      userUpdateData
+    );
+  }
+
+  getCitasByMedicoUserId(userId: number): Observable<Cita[]> {
+    return this.http.get<Cita[]>(`${this.baseUrl}/auth/citas/medico/${userId}`);
+  }
 }

@@ -15,6 +15,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { Router } from '@angular/router';
+import { Cita } from '../../models/citas.model';
 
 @Component({
   selector: 'app-manage-horarios-medicos',
@@ -34,6 +35,7 @@ import { Router } from '@angular/router';
 export class ManageProgramacionMedicosComponent implements OnInit {
   horarios: HorarioMedico[] = [];
   horariosPaginados: HorarioMedico[] = [];
+  citas: Cita[] = []; 
   selectedMedicoId: number | null = null;
   isLoading: boolean = false;
   selectedDate: string | null = null; // Nueva propiedad para la fecha seleccionada
@@ -58,10 +60,12 @@ export class ManageProgramacionMedicosComponent implements OnInit {
   medicos: Medico[] = [];
   servicios: Servicio[] = [];
   errorMessage: string = '';
+  
 
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
+    this.loadCitas();
     this.loadHorarios();
     this.loadMedicos();
     this.loadServicios();
@@ -70,6 +74,7 @@ export class ManageProgramacionMedicosComponent implements OnInit {
   }
 
   loadHorarios() {
+    this.loadCitas();
     this.apiService.listarHorariosMedicos().subscribe(
       (data: any[]) => {
         // Mapea los datos para extraer el nombre completo del médico
@@ -141,44 +146,26 @@ export class ManageProgramacionMedicosComponent implements OnInit {
               nombre: `${horario.medico.user.nombre} ${horario.medico.user.apellidoPaterno} ${horario.medico.user.apellidoMaterno}`,
             },
           }));
-          this.paginateHorarios();
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error(error);
-          this.errorMessage = 'Error al cargar los horarios médicos.';
-          this.isLoading = false;
-        }
-      );
-      return;
-    }
 
-    if (this.selectedMedicoId && this.selectedDate) {
-      this.isLoading = true; // Activar el indicador de carga
-      this.apiService.listarHorariosMedico(this.selectedMedicoId).subscribe(
-        (data: any[]) => {
-          // Filtrar los horarios por la fecha seleccionada
-          this.horarios = data
-            .filter((horario) => horario.fecha === this.selectedDate)
-            .map((horario) => ({
-              ...horario,
-              medico: {
-                ...horario.medico,
-                nombre: `${horario.medico.user.nombre} ${horario.medico.user.apellidoPaterno} ${horario.medico.user.apellidoMaterno}`,
-              },
-            }));
+          // Si el campo citaId ya está presente en cada bloque desde el backend, no se necesita asignación adicional
+          this.horarios.forEach((horario) => {
+            horario.bloques.forEach((bloque) => {
+              // Para asegurarnos de que citaId esté definido si es necesario
+              if (typeof bloque.citaId === 'undefined') {
+                bloque.citaId = null;
+              }
+            });
+          });
+
           this.paginateHorarios();
           this.isLoading = false;
         },
         (error) => {
           console.error(error);
           this.errorMessage = 'Error al cargar los horarios médicos.';
-          this.isLoading = false; // Desactivar el indicador de carga en caso de error
+          this.isLoading = false;
         }
       );
-    } else {
-      this.horarios = []; // Reinicia si no hay médico o fecha seleccionada
-      this.paginateHorarios();
     }
   }
 
@@ -226,7 +213,6 @@ export class ManageProgramacionMedicosComponent implements OnInit {
     this.isModalVisible = true;
     this.isEditMode = false; // Indica que estamos en modo de creación
   }
-  
 
   openEditModal(horario: HorarioMedico) {
     this.modalTitle = 'Editar Horario Médico';
@@ -268,6 +254,7 @@ export class ManageProgramacionMedicosComponent implements OnInit {
     this.apiService.crearHorarioMedico(this.editHorarioData).subscribe(
       (response) => {
         this.loadHorarios();
+        this.loadCitas();
         alert('Horario médico creado exitosamente.');
       },
       (error) => {
@@ -301,6 +288,7 @@ export class ManageProgramacionMedicosComponent implements OnInit {
         (response) => {
           alert('Horario médico actualizado exitosamente.');
           this.loadHorarios();
+          this.loadCitas();
         },
         (error) => {
           console.error('Error en la actualización:', error);
@@ -436,4 +424,53 @@ export class ManageProgramacionMedicosComponent implements OnInit {
       (bloque) => bloque.disponibilidad
     ).length;
   }
+
+
+  loadCitas() {
+    this.apiService.getCitas().subscribe(
+      (data: Cita[]) => {
+        this.citas = data;
+        this.asignarCitasABloques(); // Asigna las citas a los bloques de horarios
+      },
+      (error) => {
+        console.error('Error al cargar las citas:', error);
+        this.errorMessage = 'Error al cargar las citas agendadas.';
+      }
+    );
+  }
+
+
+  // asignarCitasABloques() {
+  //   this.horarios.forEach((horario) => {
+  //     horario.bloques.forEach((bloque) => {
+  //       const citaEncontrada = this.citas.find(
+  //         (cita) =>
+  //           cita.fecha === horario.fecha &&
+  //           cita.horaInicio === bloque.horaInicio &&
+  //           cita.horaFin === bloque.horaFin
+  //       );
+  //       if (citaEncontrada) {
+  //         bloque.citaId = citaEncontrada.id; // Asignar la citaId al bloque
+  //       } else {
+  //         bloque.citaId = undefined; // Dejar en undefined si no hay cita
+  //       }
+  //     });
+  //   });
+  // }
+  asignarCitasABloques() {
+    this.horarios.forEach((horario) => {
+      horario.bloques.forEach((bloque) => {
+        const citaEncontrada = this.citas.find(
+          (cita) =>
+            cita.fecha === horario.fecha &&
+            cita.horaInicio === bloque.horaInicio &&
+            cita.horaFin === bloque.horaFin &&
+            (cita.estado === 'activa' || cita.estado === 'pendiente') // Solo asigna si no está cancelada
+        );
+        bloque.citaId = citaEncontrada ? citaEncontrada.id : undefined;
+      });
+    });
+  }
+  
+  
 }

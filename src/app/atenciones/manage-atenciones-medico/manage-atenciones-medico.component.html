@@ -1,0 +1,40 @@
+<div class="atenciones-container">
+    <h2>Atenciones del Médico</h2>
+  
+    <!-- Indicador de carga -->
+    <div *ngIf="isLoading" class="loading-indicator">
+      <p>Cargando citas...</p>
+    </div>
+  
+    <!-- Mostrar tabla de citas si existen -->
+    <nz-table *ngIf="!isLoading && citas.length > 0" [nzData]="citas" nzBordered>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fin</th>
+          <th>Estado</th>
+          <th>Paciente</th>
+          <th>Teléfono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cita of citas">
+          <td>{{ cita.id }}</td>
+          <td>{{ cita.fecha }}</td>
+          <td>{{ cita.horaInicio }}</td>
+          <td>{{ cita.horaFin }}</td>
+          <td>{{ cita.estado }}</td>
+          <td>{{ cita.user.nombre }} {{ cita.user.apellido_paterno }} {{ cita.user.apellido_materno }}</td>
+          <td>{{ cita.user.telefono }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  
+    <!-- Mensaje si no hay citas -->
+    <div *ngIf="!isLoading && citas.length === 0" class="no-citas-message">
+      <p>No tiene citas agendadas</p>
+    </div>
+  </div>
+  

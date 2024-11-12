@@ -19,7 +19,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzButtonModule,
     NzInputModule,
     FormsModule,
-    NzModalModule
+    NzModalModule,
   ]
 })
 export class ManageHistorialClinicoComponent implements OnInit {
