@@ -31,7 +31,10 @@ export class ManageRolesComponent implements OnInit {
   newRoleName: string = '';
   editedRole: any = null;
   editRoleName: string = '';
-
+   
+  // Propiedades de paginación
+  pageIndex: number = 1; // Página inicial
+  pageSize: number = 5;  // Número de roles por página
   // Agrega estas propiedades
   isDeleteModalVisible = false;
   roleToDeleteId: number | null = null;
