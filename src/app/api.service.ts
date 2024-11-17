@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // Asegúrate de importar HttpClient
-import { Observable, from } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'; // Asegúrate de importar HttpClient
+import { Observable, from, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import {
   HorarioMedico,
@@ -114,7 +114,11 @@ export class ApiService {
   }
 
   // Crear un nuevo empleado
-  createEmpleado(empleadoData: any,id: number, rolId: number): Observable<any> {
+  createEmpleado(
+    empleadoData: any,
+    id: number,
+    rolId: number
+  ): Observable<any> {
     const url = `${this.baseUrl}/auth/medicos/crear/${id}?rolId=${rolId}`;
     return this.http.post(url, empleadoData);
   }
@@ -428,4 +432,99 @@ export class ApiService {
   getCitasByMedicoUserId(userId: number): Observable<Cita[]> {
     return this.http.get<Cita[]>(`${this.baseUrl}/auth/citas/medico/${userId}`);
   }
+
+  getCitaById(citaId: number): Observable<Cita> {
+    return this.http.get<Cita>(`${this.baseUrl}/auth/citas/obtener/${citaId}`);
+  }
+
+  private rxNormUrl = 'https://rxnav.nlm.nih.gov/REST/drugs.json';
+  buscarMedicamentosRxNorm(query: string): Observable<string[]> {
+    if (!query.trim()) {
+      return of([]); // Si la búsqueda está vacía, retorna un array vacío
+    }
+
+    const params = new HttpParams().set('name', query);
+
+    return this.http.get<any>(this.rxNormUrl, { params }).pipe(
+      map((response) => {
+        const medicamentos: any[] = [];
+        if (response.drugGroup && response.drugGroup.conceptGroup) {
+          response.drugGroup.conceptGroup.forEach(
+            (group: { conceptProperties: any[] }) => {
+              if (group.conceptProperties) {
+                group.conceptProperties.forEach((concept: any) => {
+                  medicamentos.push(concept.name);
+                });
+              }
+            }
+          );
+        }
+        return medicamentos;
+      }),
+      catchError((error) => {
+        console.error('Error al buscar medicamentos en RxNorm:', error);
+        return of([]);
+      })
+    );
+  }
+
+  crearConsulta(
+    citaId: number,
+    userId: number,
+    horaInicio: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/auth/consultas/create`;
+    const params = {
+      citaId: citaId.toString(),
+      userId: userId.toString(),
+      horaInicio: horaInicio,
+    };
+    return this.http.post(url, params);
+  }
+
+  // Finalizar consulta
+  finalizarConsulta(
+    consultaId: number,
+    motivoConsulta: string,
+    horaFin: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/auth/consultas/finalizar/${consultaId}`;
+    const params = { motivoConsulta, horaFin };
+    return this.http.put(url, params);
+  }
+
+  guardarDiagnostico(diagnosticoData: any): Observable<any> {
+    console.log(diagnosticoData);
+    const url = `${this.baseUrl}/auth/diagnosticos/guardar`;
+    return this.http.post(url, diagnosticoData);
+  }
+
+  // Obtener diagnóstico por consulta ID
+  getDiagnosticoByConsultaId(consultaId: number): Observable<any> {
+    const url = `${this.baseUrl}/auth/diagnosticos/consulta/${consultaId}`;
+    return this.http.get(url);
+  }
+
+  // Actualizar diagnóstico
+  actualizarDiagnostico(id: number, diagnosticoData: any): Observable<any> {
+    console.log(diagnosticoData);
+    console.log(id);
+    const url = `${this.baseUrl}/auth/diagnosticos/actualizar/${id}`;
+    return this.http.put(url, diagnosticoData);
+  }
+
+  guardarReceta(recetaData: any): Observable<any> {
+    console.log(recetaData);
+    return this.http.post(`${this.baseUrl}/auth/recetas/guardar`, recetaData);
+  }
+
+  obtenerRecetasPorConsulta(consultaId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/auth/recetas/consulta/${consultaId}`);
+  }
+
+  actualizarReceta(id: number, recetaData: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/auth/recetas/actualizar/${id}`, recetaData);
+  }
+
+  
 }

@@ -20,6 +20,7 @@ import { ManageHistorialClinicoComponent } from './atenciones/manage-historial-c
 import { VerAntecedentesComponent } from './atenciones/ver-antecedentes/ver-antecedentes.component';
 
 import { ManageAtencionesMedicoComponent } from './atenciones/manage-atenciones-medico/manage-atenciones-medico.component';
+import { ConsultaMedicaComponent } from './atenciones/consulta-medica/consulta-medica.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },
@@ -84,6 +85,9 @@ export const routes: Routes = [
       {
         path: 'atenciones/atencines_realizara_medico',
         component:ManageAtencionesMedicoComponent 
+      },
+      {
+        path: 'consulta-medica/:citaId/:consultaId', component: ConsultaMedicaComponent
       },
       {
         path: 'welcome',
