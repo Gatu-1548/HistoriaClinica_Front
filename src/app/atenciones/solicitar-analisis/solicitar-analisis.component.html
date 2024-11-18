@@ -1,0 +1,21 @@
+<div class="solicitar-analisis-container">
+    <h3>Solicitar Análisis Clínicos</h3>
+    <form [formGroup]="analisisForm" (ngSubmit)="solicitarAnalisis()">
+      <label for="analisis">Selecciona los análisis:</label>
+      <nz-select
+        formControlName="analisisIds"
+        nzMode="multiple"
+        nzPlaceHolder="Selecciona análisis"
+      >
+        <nz-option
+          *ngFor="let analisis of analisisClinicoList"
+          [nzValue]="analisis.id"
+          [nzLabel]="analisis.nombre"
+        ></nz-option>
+      </nz-select>
+      <button nz-button nzType="primary" [disabled]="!analisisForm.valid">
+        Solicitar
+      </button>
+    </form>
+  </div>
+  

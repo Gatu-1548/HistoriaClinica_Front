@@ -1,0 +1,64 @@
+/* Contenedor principal */
+.resultados-laboratorio-container {
+  padding: 20px;
+  background-color: #f4f6f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+/* Título */
+.resultados-laboratorio-container h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Cada resultado */
+.resultado-item {
+  background-color: #ffffff;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+
+.resultado-item:hover {
+  transform: scale(1.02);
+}
+
+/* Estilos de texto en el resultado */
+.resultado-item p {
+  margin: 5px 0;
+  font-size: 1em;
+  color: #555;
+}
+
+.resultado-item p strong {
+  color: #333;
+}
+
+.resultado-item:hover {
+  transform: scale(1.02);
+}
+.resultado-imagen {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Mensaje de "No hay resultados" */
+.no-resultados {
+  font-size: 1.1em;
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+    margin-bottom: 15px;
+  }

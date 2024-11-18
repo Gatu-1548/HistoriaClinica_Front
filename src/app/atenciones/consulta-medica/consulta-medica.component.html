@@ -42,6 +42,18 @@
         <app-solicitar-analisis [citaId]="cita.id"></app-solicitar-analisis>
       </nz-tab> -->
     <!-- Puedes añadir más pestañas según sea necesario -->
+
+
+
+    <nz-tab nzTitle="Solicitar Análisis">
+      <app-solicitar-analisis [consultaId]="consultaId"></app-solicitar-analisis>
+    </nz-tab>
+    
+    <nz-tab nzTitle="Resultados de Análisis">
+      <app-ver-resultados [consultaId]="consultaId"></app-ver-resultados>
+    </nz-tab>
+
+
   </nz-tabset>
 
   <button nz-button nzType="primary" (click)="finalizarConsulta()">

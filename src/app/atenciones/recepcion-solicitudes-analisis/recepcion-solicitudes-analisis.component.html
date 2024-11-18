@@ -1,0 +1,40 @@
+<div class="gestion-resultados-container">
+    <h3>Gestión de Resultados de Análisis Pendientes</h3>
+  
+    <div class="contenido-principal">
+      <!-- Columna izquierda: Listado de órdenes pendientes -->
+      <div class="lista-ordenes">
+        <h4>Órdenes Pendientes</h4>
+        <ul class="ordenes-list">
+          <li *ngFor="let orden of ordenesPendientes" (click)="seleccionarOrden(orden)" [class.selected]="orden === selectedOrden">
+            <p><strong>Análisis:</strong> {{ orden.analisisClinico.nombre }}</p>
+            <p><strong>Paciente:</strong> {{ orden.consulta.user.nombre }} {{ orden.consulta.user.apellido }}</p>
+            <p><strong>Fecha de Solicitud:</strong> {{ orden.fechaSolicitud | date }}</p>
+          </li>
+        </ul>
+      </div>
+  
+      <!-- Columna derecha: Formulario para agregar resultados -->
+      <div class="formulario-resultado" *ngIf="selectedOrden">
+        <h4>Agregar Resultados para {{ selectedOrden.analisisClinico.nombre }}</h4>
+        <p><strong>Paciente:</strong> {{ selectedOrden.consulta.user.nombre }} {{ selectedOrden.consulta.user.apellido }}</p>
+  
+        <input type="file" (change)="onFilesSelected($event)" multiple />
+        
+        <!-- Mostrar las vistas previas de las imágenes seleccionadas -->
+        <div class="preview-container">
+          <h5>Vista Previa de Imágenes</h5>
+          <div class="preview-images">
+            <div *ngFor="let url of previewUrls; index as i" class="image-container">
+              <img [src]="url" alt="Vista previa de imagen" />
+              <button class="remove-btn" (click)="quitarImagen(i)">✖</button>
+            </div>
+          </div>
+        </div>
+  
+        <textarea [(ngModel)]="observacionesNuevas" placeholder="Observaciones adicionales"></textarea>
+        <button nz-button nzType="primary" (click)="agregarResultados()">Registrar Resultados</button>
+      </div>
+    </div>
+  </div>
+  

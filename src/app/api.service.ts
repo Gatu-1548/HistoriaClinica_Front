@@ -15,8 +15,8 @@ import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
-  //private baseUrl = 'http://localhost:8080';
+  //private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
+  private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
   // Método para registrar usuarioGIT
@@ -527,4 +527,39 @@ export class ApiService {
   }
 
   
+
+  //----------laboratorio---------
+
+  // Obtener todos los tipos de análisis clínico
+getAnalisisClinico(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/auth/analisis`);
+}
+
+// Crear un nuevo análisis clínico
+createAnalisisClinico(analisisData: any): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/auth/analisis`, analisisData);
+}
+
+// Obtener órdenes de laboratorio por consulta
+getOrdenesPorConsulta(consultaId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/consulta/${consultaId}`);
+}
+
+// Crear una nueva orden de laboratorio
+createOrdenLaboratorio(ordenData: any): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/auth/ordenes`, ordenData);
+}
+
+// Registrar o actualizar el resultado de una orden de laboratorio
+registrarResultadosOrden(id: number, resultados: string[], observaciones: string): Observable<any> {
+  const url = `${this.baseUrl}/auth/ordenes/${id}/resultado`;
+  return this.http.put(url, { resultados, observaciones });
+}
+
+
+getOrdenesPendientes(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/pendientes`);
+}
+
+
 }

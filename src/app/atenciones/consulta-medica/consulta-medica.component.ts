@@ -9,6 +9,9 @@ import { VerAntecedentesComponent } from '../ver-antecedentes/ver-antecedentes.c
 import { AnadirDiagnosticoComponent } from '../anadir-diagnostico/anadir-diagnostico.component';
 import { RecetarMedicamentosComponent } from '../recetar-medicamentos/recetar-medicamentos.component';
 import { FormsModule } from '@angular/forms';
+import { SolicitarAnalisisComponent } from '../solicitar-analisis/solicitar-analisis.component';
+import { VerResultadosComponent } from '../ver-resultados/ver-resultados.component';
+// import { GestorAnalisisComponent } from '../gestor-analisis/gestor-analisis.component';
 
 @Component({
   selector: 'app-consulta-medica',
@@ -20,6 +23,8 @@ import { FormsModule } from '@angular/forms';
     VerAntecedentesComponent,
     AnadirDiagnosticoComponent,
     RecetarMedicamentosComponent,
+    SolicitarAnalisisComponent,
+    VerResultadosComponent,
   ],
   templateUrl: './consulta-medica.component.html',
   styleUrl: './consulta-medica.component.css',

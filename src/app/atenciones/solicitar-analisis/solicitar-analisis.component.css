@@ -1,0 +1,40 @@
+/* Contenedor principal */
+.solicitar-analisis-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  /* Título */
+  .solicitar-analisis-container h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  /* Selector de análisis */
+  .solicitar-analisis-container nz-select {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  /* Botón de solicitud */
+  .solicitar-analisis-container button {
+    width: 100%;
+    font-size: 1em;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .solicitar-analisis-container button:hover {
+    background-color: #45a049;
+  }
+  

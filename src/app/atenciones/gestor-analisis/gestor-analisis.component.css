@@ -1,0 +1,73 @@
+/* Contenedor principal */
+.gestor-analisis-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  /* Título */
+  .gestor-analisis-container h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  /* Cada solicitud de análisis */
+  .orden-item {
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+  }
+  
+  .orden-item:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Estilos para el formulario de agregar resultado */
+  .agregar-resultado {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .agregar-resultado textarea {
+    width: 100%;
+    min-height: 50px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .agregar-resultado button {
+    width: 100%;
+    font-size: 1em;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .agregar-resultado button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Mensaje de "No hay órdenes" */
+  .no-ordenes {
+    font-size: 1.1em;
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
