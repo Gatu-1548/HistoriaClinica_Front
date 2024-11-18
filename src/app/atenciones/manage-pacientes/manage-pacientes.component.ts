@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service'; // Ajusta la ruta si es necesario
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
@@ -35,7 +34,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzSelectModule,
     NzRadioModule,
     NzDatePickerModule,
-    
   ],
   providers: [NzMessageService],
   templateUrl: './manage-pacientes.component.html',
@@ -52,27 +50,45 @@ export class ManagePacientesComponent implements OnInit {
   isEditModalVisible: boolean = false;
   usuarioEditado: any = {};
   editModalRef: NzModalRef | null = null;
+  mostrarConSeguro: boolean = false; // Nueva variable para alternar la vista
+  isLoading: boolean = false;
 
   @ViewChild('antecedentesModalContent', { static: true })
   antecedentesModalContent!: TemplateRef<any>;
-  isLoading: boolean = false;
   @ViewChild('editUserModalContent', { static: true })
   editUserModalContent!: TemplateRef<any>;
 
-  constructor(private apiService: ApiService, private modal: NzModalService,private message: NzMessageService) {}
+  constructor(
+    private apiService: ApiService,
+    private modal: NzModalService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.getUsuarios();
   }
 
+  // Nuevo método para alternar entre mostrar todos los usuarios y usuarios con seguro
+  toggleUsuariosConSeguro() {
+    this.mostrarConSeguro = !this.mostrarConSeguro;
+    this.getUsuarios(); // Actualiza la lista según la opción seleccionada
+  }
+
   getUsuarios() {
-    this.apiService.getUsuarios().subscribe(
+    this.isLoading = true;
+    const obtenerUsuarios = this.mostrarConSeguro
+      ? this.apiService.getUsuariosConSeguro() // Llama a usuarios con seguro si mostrarConSeguro es true
+      : this.apiService.getUsuarios();         // Llama a todos los usuarios si mostrarConSeguro es false
+
+    obtenerUsuarios.subscribe(
       (data: any) => {
         this.usuarios = data;
         this.filterUsuarios(); // Aplicar filtro inicial
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error al obtener usuarios', error);
+        this.isLoading = false;
       }
     );
   }
@@ -96,7 +112,6 @@ export class ManagePacientesComponent implements OnInit {
   }
 
   onAntecedentes(usuario: any) {
-    // Aquí puedes navegar a la página de antecedentes o abrir un modal
     this.apiService.getAntecedentesByUserId(usuario.id).subscribe(
       (data) => {
         this.antecedentes = data;
@@ -120,12 +135,11 @@ export class ManagePacientesComponent implements OnInit {
   }
 
   onEditar(usuario: any) {
-    // Aquí puedes navegar a la página de edición o abrir un modal
     console.log('Editar usuario:', usuario);
   }
 
   abrirModalEdicion(usuario: any) {
-    this.usuarioEditado = { ...usuario }; // Copia los datos del usuario para editar
+    this.usuarioEditado = { ...usuario };
     this.editModalRef = this.modal.create({
       nzTitle: 'Editar Usuario',
       nzContent: this.editUserModalContent,
@@ -133,6 +147,7 @@ export class ManagePacientesComponent implements OnInit {
       nzWidth: 600,
     });
   }
+  
   closeEditModal() {
     if (this.editModalRef) {
       this.editModalRef.close();
@@ -143,8 +158,6 @@ export class ManagePacientesComponent implements OnInit {
   // Método para enviar los datos actualizados al backend
   actualizarUsuario() {
     this.isLoading = true;
-  
-    // Convertir la fecha al formato 'yyyy-MM-dd'
     const usuarioActualizado = { ...this.usuarioEditado };
     if (usuarioActualizado.fecha_nacimiento) {
       const fecha = new Date(usuarioActualizado.fecha_nacimiento);
@@ -161,11 +174,8 @@ export class ManagePacientesComponent implements OnInit {
           this.editModalRef.close();
           this.editModalRef = null;
         }
-  
-        // Actualizar la lista de usuarios
         this.usuarios = this.usuarios.map((user) => user.id === data.id ? data : user);
         this.filterUsuarios();
-  
         this.message.success('Usuario actualizado exitosamente');
       },
       (error) => {
@@ -175,11 +185,8 @@ export class ManagePacientesComponent implements OnInit {
       }
     );
   }
-  
 
   disabledDate = (current: Date): boolean => {
-    // No permitir seleccionar fechas futuras
     return current && current > new Date();
   };
-  
 }

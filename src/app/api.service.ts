@@ -53,7 +53,11 @@ export class ApiService {
       }
     );
   }
-
+   // Método para obtener usuarios que tienen seguro
+getUsuariosConSeguro(): Observable<any> {
+  const url = `${this.baseUrl}/auth/users/conSeguro`;
+  return this.http.get(url);
+}
   getUserByCI(ci: string): Observable<any> {
     const url = `${this.baseUrl}/auth/users/ci/${ci}`;
     return this.http.get(url);
