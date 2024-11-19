@@ -602,7 +602,7 @@ export class ApiService {
 
   // Método para actualizar el estado de una cita
   updateCitaEstado(citaId: number, nuevoEstado: string): Observable<any> {
-    const url = `http://localhost:8080/auth/citas/actualizar-estado/${citaId}`;
+    const url = `${this.baseUrl}/auth/citas/actualizar-estado/${citaId}`;
     const headers = {
       'Content-Type': 'application/json',
     };
