@@ -15,8 +15,8 @@ import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
   providedIn: 'root',
 })
 export class ApiService {
-  //private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
-  private baseUrl = 'http://localhost:8080';
+   private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
+  //private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
   // Método para registrar usuarioGIT
@@ -53,11 +53,11 @@ export class ApiService {
       }
     );
   }
-   // Método para obtener usuarios que tienen seguro
-getUsuariosConSeguro(): Observable<any> {
-  const url = `${this.baseUrl}/auth/users/conSeguro`;
-  return this.http.get(url);
-}
+  // Método para obtener usuarios que tienen seguro
+  getUsuariosConSeguro(): Observable<any> {
+    const url = `${this.baseUrl}/auth/users/conSeguro`;
+    return this.http.get(url);
+  }
   getUserByCI(ci: string): Observable<any> {
     const url = `${this.baseUrl}/auth/users/ci/${ci}`;
     return this.http.get(url);
@@ -407,11 +407,11 @@ getUsuariosConSeguro(): Observable<any> {
 
   getAntecedentesByUserId(userId: number): Observable<any> {
     const url = `${this.baseUrl}/auth/antecedente/usuario/${userId}`;
-    const token = localStorage.getItem('token') || ''; // Obtén el token del localStorage
+    // const token = localStorage.getItem('token') || ''; // Obtén el token del localStorage
     return this.http.get(url, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en este formato
+        //'Content-Type': 'application/json',
+        //Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en este formato
       },
     });
   }
@@ -523,47 +523,80 @@ getUsuariosConSeguro(): Observable<any> {
   }
 
   obtenerRecetasPorConsulta(consultaId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/auth/recetas/consulta/${consultaId}`);
+    return this.http.get<any[]>(
+      `${this.baseUrl}/auth/recetas/consulta/${consultaId}`
+    );
   }
 
   actualizarReceta(id: number, recetaData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/auth/recetas/actualizar/${id}`, recetaData);
+    return this.http.put(
+      `${this.baseUrl}/auth/recetas/actualizar/${id}`,
+      recetaData
+    );
   }
-
-  
 
   //----------laboratorio---------
 
   // Obtener todos los tipos de análisis clínico
-getAnalisisClinico(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.baseUrl}/auth/analisis`);
-}
+  getAnalisisClinico(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/auth/analisis`);
+  }
 
-// Crear un nuevo análisis clínico
-createAnalisisClinico(analisisData: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/auth/analisis`, analisisData);
-}
+  // Crear un nuevo análisis clínico
+  createAnalisisClinico(analisisData: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/analisis`, analisisData);
+  }
 
-// Obtener órdenes de laboratorio por consulta
-getOrdenesPorConsulta(consultaId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/consulta/${consultaId}`);
-}
+  // Obtener órdenes de laboratorio por consulta
+  getOrdenesPorConsulta(consultaId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/auth/ordenes/consulta/${consultaId}`
+    );
+  }
 
-// Crear una nueva orden de laboratorio
-createOrdenLaboratorio(ordenData: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/auth/ordenes`, ordenData);
-}
+  // Crear una nueva orden de laboratorio
+  createOrdenLaboratorio(ordenData: any): Observable<any> {
+    console.log(ordenData);
+    return this.http.post<any>(`${this.baseUrl}/auth/ordenes`, ordenData);
+  }
 
-// Registrar o actualizar el resultado de una orden de laboratorio
-registrarResultadosOrden(id: number, resultados: string[], observaciones: string): Observable<any> {
-  const url = `${this.baseUrl}/auth/ordenes/${id}/resultado`;
-  return this.http.put(url, { resultados, observaciones });
-}
+  // Registrar o actualizar el resultado de una orden de laboratorio
+  registrarResultadosOrden(
+    id: number,
+    resultados: string[],
+    observaciones: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/auth/ordenes/${id}/resultado`;
+    return this.http.put(url, { resultados, observaciones });
+  }
 
+  getOrdenesPendientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/pendientes`);
+  }
 
-getOrdenesPendientes(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/pendientes`);
-}
+  //pruebas
+  // getAntecedentes(pacienteId: number): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.baseUrl}/historial/antecedentes/${pacienteId}`);
+  // }
 
+  getTriajes(pacienteId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/auth/historias-clinicas/usuario/${pacienteId}`
+    );
+  }
 
+  getConsultasConDiagnosticos(pacienteId: number): Observable<any[]> {
+    const url = `${this.baseUrl}/auth/historias-clinicas/usuario/${pacienteId}/consultas-diagnosticos`;
+    return this.http.get<any[]>(url);
+  }
+
+  getRecetasConConsulta(pacienteId: number): Observable<any[]> {
+    const url = `${this.baseUrl}/auth/recetas/usuario/${pacienteId}`;
+    return this.http.get<any[]>(url);
+  }
+
+  generarReporte(config: any): Observable<Blob> {
+    const url = `${this.baseUrl}/auth/reportes/medicos`;
+    return this.http.post(url, config, { responseType: 'blob' });
+  }
 }

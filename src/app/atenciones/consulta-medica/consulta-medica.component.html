@@ -52,7 +52,10 @@
     <nz-tab nzTitle="Resultados de Análisis">
       <app-ver-resultados [consultaId]="consultaId"></app-ver-resultados>
     </nz-tab>
-
+    <nz-tab nzTitle="Historial">
+      <!-- Componente del historial clínico -->
+      <app-historial-consulta [pacienteId]="cita.user.id"></app-historial-consulta>
+    </nz-tab>
 
   </nz-tabset>
 

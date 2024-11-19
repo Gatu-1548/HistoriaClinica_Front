@@ -51,7 +51,7 @@ export class ManageEmpleadosComponent implements OnInit {
   especialidades: any[] = [];
   roles: any[] = [];
   isLoading: boolean = false;
-  isLoadingEmpleados=false;
+  isLoadingEmpleados = false;
   editEmpleadoData: any = {
     estado: '',
     fechaContratacion: null,
@@ -101,7 +101,7 @@ export class ManageEmpleadosComponent implements OnInit {
       }
     );
   }
-  
+
   loadEspecialidades() {
     this.apiService.getEspecialidades().subscribe((data) => {
       this.especialidades = data;
@@ -329,4 +329,105 @@ export class ManageEmpleadosComponent implements OnInit {
     }
     return [];
   }
+
+  isReporteModalOpen = false; // Controla la visibilidad del modal
+  columnasDisponibles = [
+    'id',
+    'ci',
+    'nombre',
+    'apellido paterno',
+    'apellido materno',
+    'correo',
+    'fecha nacimiento',
+    'telefono',
+    'genero',
+    'especialidades',
+    'fecha contratacion',
+    'estado',
+    'rol',
+  ];
+  reporteConfig = {
+    columnas: [],
+    filtros: {
+      estado: null,
+      genero: null,
+      especialidad: null,
+      fecha_contratacion_desde: null,
+      fecha_contratacion_hasta: null,
+    },
+    orden: {
+      columna: '',
+      direccion: '',
+    },
+    formato: 'pdf', // Formato por defecto
+  };
+
+  openReporteModal(): void {
+    this.isReporteModalOpen = true;
+  }
+
+  closeReporteModal(): void {
+    this.isReporteModalOpen = false;
+  }
+
+  generarReporte(): void {
+    const payload = {
+      columnas: this.reporteConfig.columnas,
+      filtros: {
+        ...(this.reporteConfig.filtros.estado
+          ? { estado: this.reporteConfig.filtros.estado }
+          : {}),
+        ...(this.reporteConfig.filtros.genero
+          ? { genero: this.reporteConfig.filtros.genero }
+          : {}),
+        ...(this.reporteConfig.filtros.especialidad
+          ? { especialidad: this.reporteConfig.filtros.especialidad }
+          : {}),
+        ...(this.reporteConfig.filtros.fecha_contratacion_desde
+          ? {
+              fecha_contratacion_desde: this.formatDate(
+                this.reporteConfig.filtros.fecha_contratacion_desde
+              ),
+            }
+          : {}),
+        ...(this.reporteConfig.filtros.fecha_contratacion_hasta
+          ? {
+              fecha_contratacion_hasta: this.formatDate(
+                this.reporteConfig.filtros.fecha_contratacion_hasta
+              ),
+            }
+          : {}),
+      },
+      orden: {
+        columna: this.reporteConfig.orden.columna || 'id', // Por defecto "id"
+        direccion: this.reporteConfig.orden.direccion || 'Asc', // Por defecto Ascendente
+      },
+      formato: this.reporteConfig.formato || 'pdf', // Por defecto PDF
+    };
+  
+    this.apiService.generarReporte(payload).subscribe(
+      (response) => {
+        const blob = new Blob([response], {
+          type:
+            this.reporteConfig.formato === 'pdf'
+              ? 'application/pdf'
+              : 'application/vnd.ms-excel',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte.${this.reporteConfig.formato}`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.message.success('Reporte generado exitosamente.');
+      },
+      (error) => {
+        this.message.error('Error al generar el reporte.');
+        console.error(error);
+      }
+    );
+  
+    this.closeReporteModal();
+  }
+  
 }

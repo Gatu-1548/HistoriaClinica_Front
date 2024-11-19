@@ -1,0 +1,65 @@
+.consulta-medica-container {
+    padding: 20px;
+}
+
+.datos-paciente {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.motivo-consulta {
+    margin-top: 15px;
+}
+
+.motivo-consulta textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #d9d9d9;
+    resize: vertical;
+}
+
+.historial-container h3 {
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.historial-section {
+    margin-top: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.triaje-item {
+    background-color: #f5f5f5; /* Color de fondo para diferenciar cada triaje */
+    margin-bottom: 10px; /* Espaciado entre triajes */
+    padding: 15px; /* Espaciado interno */
+    border: 1px solid #ddd; /* Borde para resaltar el triaje */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.triaje-item p {
+    margin: 5px 0; /* Espaciado entre líneas */
+    font-size: 14px; /* Tamaño de fuente uniforme */
+    color: #333; /* Color de texto */
+}
+
+.triaje-item:last-child {
+    margin-bottom: 0; /* Sin margen en el último triaje */
+}
+
+.consulta-item {
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .consulta-item p {
+    margin: 5px 0;
+  }
+  

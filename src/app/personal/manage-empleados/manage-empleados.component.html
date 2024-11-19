@@ -1,7 +1,13 @@
 <div class="empleados-container">
   <h2>Gestionar Empleados</h2>
   <div class="actions">
-    <button nz-button nzType="primary" (click)="openModal()">Crear Empleado</button>
+    <button nz-button nzType="primary" (click)="openModal()">
+      Crear Empleado
+    </button>
+
+    <button nz-button nzType="primary" (click)="openReporteModal()">
+      Generar Reporte
+    </button>
     <nz-input-group [nzSuffix]="suffixIcon" class="search-input">
       <input
         type="text"
@@ -59,7 +65,11 @@
           <td>{{ empleado.fechaContratacion | date : "dd/MM/yyyy" }}</td>
           <td>{{ empleado.user.rol.nombre }}</td>
           <td>
-            <button nz-button nzType="default" (click)="openModal(true, empleado)">
+            <button
+              nz-button
+              nzType="default"
+              (click)="openModal(true, empleado)"
+            >
               <i nz-icon nzType="edit"></i>
             </button>
           </td>
@@ -211,7 +221,11 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="6">Rol</nz-form-label>
           <nz-form-control [nzSpan]="18">
-            <nz-select [(ngModel)]="editEmpleadoData.rolId" name="rolId" required>
+            <nz-select
+              [(ngModel)]="editEmpleadoData.rolId"
+              name="rolId"
+              required
+            >
               <nz-option
                 *ngFor="let rol of roles"
                 [nzValue]="rol.id"
@@ -225,15 +239,157 @@
 
     <!-- Custom Footer for Loading -->
     <ng-template #modalFooter>
-      <button nz-button nzType="default" (click)="closeModal()">Cancelar</button>
+      <button nz-button nzType="default" (click)="closeModal()">
+        Cancelar
+      </button>
       <button
         nz-button
         nzType="primary"
         [nzLoading]="isLoading"
         (click)="isEditing ? saveEmpleado() : createEmpleado()"
       >
-        {{ isEditing ? 'Guardar Cambios' : 'Crear Empleado' }}
+        {{ isEditing ? "Guardar Cambios" : "Crear Empleado" }}
       </button>
     </ng-template>
   </nz-modal>
 </div>
+
+
+<nz-modal
+  [(nzVisible)]="isReporteModalOpen"
+  nzTitle="Configuración de Reportes"
+  (nzOnCancel)="closeReporteModal()"
+  [nzFooter]="null"
+>
+  <div *nzModalContent>
+    <form nz-form>
+      <!-- Seleccionar Columnas -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Columnas</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.columnas"
+            name="columnas"
+            nzMode="multiple"
+            nzPlaceHolder="Seleccione las columnas"
+          >
+            <nz-option
+              *ngFor="let columna of columnasDisponibles"
+              [nzValue]="columna"
+              [nzLabel]="columna"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Filtros -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Estado</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.filtros.estado"
+            name="estado"
+            nzPlaceHolder="Seleccione el estado"
+          >
+            <nz-option nzValue="Activo" nzLabel="Activo"></nz-option>
+            <nz-option nzValue="Inactivo" nzLabel="Inactivo"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Género</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.filtros.genero"
+            name="genero"
+            nzPlaceHolder="Seleccione el género"
+          >
+            <nz-option nzValue="Masculino" nzLabel="Masculino"></nz-option>
+            <nz-option nzValue="Femenino" nzLabel="Femenino"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Especialidad</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.filtros.especialidad"
+            name="especialidad"
+            nzPlaceHolder="Seleccione la especialidad"
+          >
+            <nz-option
+              *ngFor="let especialidad of especialidades"
+              [nzValue]="especialidad.nombre"
+              [nzLabel]="especialidad.nombre"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Fecha de Contratación</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-date-picker
+            [(ngModel)]="reporteConfig.filtros.fecha_contratacion_desde"
+            name="fechaContratacionDesde"
+            nzPlaceHolder="Desde"
+          ></nz-date-picker>
+          <nz-date-picker
+            [(ngModel)]="reporteConfig.filtros.fecha_contratacion_hasta"
+            name="fechaContratacionHasta"
+            nzPlaceHolder="Hasta"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Orden -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Orden</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.orden.columna"
+            name="ordenColumna"
+            nzPlaceHolder="Seleccione columna para ordenar"
+          >
+            <nz-option
+              *ngFor="let columna of columnasDisponibles"
+              [nzValue]="columna"
+              [nzLabel]="columna"
+            ></nz-option>
+          </nz-select>
+          <nz-select
+            [(ngModel)]="reporteConfig.orden.direccion"
+            name="ordenDireccion"
+            nzPlaceHolder="Seleccione dirección"
+          >
+            <nz-option nzValue="Asc" nzLabel="Ascendente"></nz-option>
+            <nz-option nzValue="Desc" nzLabel="Descendente"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Formato -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Formato</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <nz-select
+            [(ngModel)]="reporteConfig.formato"
+            name="formato"
+            nzPlaceHolder="Seleccione formato"
+          >
+            <nz-option nzValue="pdf" nzLabel="PDF"></nz-option>
+            <nz-option nzValue="excel" nzLabel="Excel"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Botón de Generar -->
+      <div class="modal-footer">
+        <button nz-button nzType="default" (click)="closeReporteModal()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="generarReporte()">Generar Reporte</button>
+      </div>
+    </form>
+  </div>
+</nz-modal>

@@ -69,10 +69,10 @@ export class ManageAtencionesMedicoComponent implements OnInit {
   }
 
   abrirMenuConsulta(cita: Cita) {
-    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+   // const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     const horaInicio = new Date().toLocaleTimeString('it-IT'); // Hora actual en formato HH:mm:ss
 
-    this.apiService.crearConsulta(cita.id, user.id, horaInicio).subscribe(
+    this.apiService.crearConsulta(cita.id, cita.user.id, horaInicio).subscribe(
         (response) => {
             const consultaId = response.id; // Almacena el id de la consulta devuelto por el backend
             this.router.navigate(['/consulta-medica', cita.id,consultaId]);

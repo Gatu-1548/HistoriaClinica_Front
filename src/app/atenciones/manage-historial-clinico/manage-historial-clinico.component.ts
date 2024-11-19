@@ -68,5 +68,6 @@ export class ManageHistorialClinicoComponent implements OnInit {
 
   closeModal() {
     this.isModalVisible = false;
+    this.antecedentes = null;
   }
 }

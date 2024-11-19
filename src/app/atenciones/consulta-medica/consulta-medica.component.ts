@@ -11,6 +11,7 @@ import { RecetarMedicamentosComponent } from '../recetar-medicamentos/recetar-me
 import { FormsModule } from '@angular/forms';
 import { SolicitarAnalisisComponent } from '../solicitar-analisis/solicitar-analisis.component';
 import { VerResultadosComponent } from '../ver-resultados/ver-resultados.component';
+import { HistorialConsultaComponent } from '../historial-consulta/historial-consulta.component';
 // import { GestorAnalisisComponent } from '../gestor-analisis/gestor-analisis.component';
 
 @Component({
@@ -25,6 +26,7 @@ import { VerResultadosComponent } from '../ver-resultados/ver-resultados.compone
     RecetarMedicamentosComponent,
     SolicitarAnalisisComponent,
     VerResultadosComponent,
+    HistorialConsultaComponent
   ],
   templateUrl: './consulta-medica.component.html',
   styleUrl: './consulta-medica.component.css',

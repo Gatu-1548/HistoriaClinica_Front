@@ -1,0 +1,204 @@
+<div class="historial-container">
+  <h2>Historial Clínico del Paciente</h2>
+
+  <!-- Antecedentes -->
+  <div class="historial-section">
+    <h3 (click)="toggleSection('antecedentes')">Antecedentes Médicos</h3>
+    <nz-spin [nzSpinning]="isLoadingAntecedentes">
+      <div *ngIf="seccionesVisibles['antecedentes']">
+        <div *ngIf="antecedentes && antecedentes.length > 0">
+          <div *ngFor="let antecedente of antecedentes">
+            <p>
+              <strong>Fecha:</strong>
+              {{ antecedente.fecha | date : "dd-MM-yyyy" }}
+            </p>
+            <p>
+              <strong>Enfermedades Crónicas:</strong>
+              {{ antecedente.enfermedadesCronicas?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Enfermedades Agudas:</strong>
+              {{ antecedente.enfermedadesAgudas?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Intervenciones Quirúrgicas:</strong>
+              {{
+                antecedente.intervencionesQuirurgicas?.join(", ") || "Ninguna"
+              }}
+            </p>
+            <p>
+              <strong>Alergias:</strong>
+              {{ antecedente.alergias?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Hospitalizaciones Previas:</strong>
+              {{ antecedente.hospitalizacionesPrevias || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Medicamentos de Uso Prolongado:</strong>
+              {{
+                antecedente.medicamentosUsoLargoPlazo?.join(", ") || "Ninguna"
+              }}
+            </p>
+            <p>
+              <strong>Enfermedades Infecciosas:</strong>
+              {{ antecedente.enfermedadesInfecciosas?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Vacunas:</strong>
+              {{ antecedente.vacunas?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Enfermedades Hereditarias:</strong>
+              {{
+                antecedente.enfermedadesHereditarias?.join(", ") || "Ninguna"
+              }}
+            </p>
+            <p>
+              <strong>Suplementos:</strong>
+              {{ antecedente.suplementos?.join(", ") || "Ninguna" }}
+            </p>
+            <p>
+              <strong>Restricciones Alimenticias:</strong>
+              {{
+                antecedente.restriccionesAlimenticias?.join(", ") || "Ninguna"
+              }}
+            </p>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingAntecedentes && antecedentes.length === 0">
+          <p>No se encontraron antecedentes para este usuario.</p>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <!-- Triajes -->
+  <div class="historial-section">
+    <h3 (click)="toggleSection('triajes')">Triajes</h3>
+    <nz-spin [nzSpinning]="isLoadingTriajes">
+      <div *ngIf="seccionesVisibles['triajes']">
+        <div *ngIf="triajes && triajes.length > 0">
+          <div *ngFor="let triaje of triajes" class="triaje-item">
+            <p>
+              <strong>Nombre del Paciente:</strong>
+              {{
+                triaje.user.nombre +
+                  " " +
+                  triaje.user.apellido_paterno +
+                  " " +
+                  triaje.user.apellido_materno
+              }}
+            </p>
+            <p>
+              <strong>Fecha:</strong> {{ triaje.fecha | date : "dd-MM-yyyy" }}
+            </p>
+            <p><strong>Temperatura:</strong> {{ triaje.temperatura }} °C</p>
+            <p>
+              <strong>Presión Arterial:</strong> {{ triaje.presionArterial }}
+            </p>
+            <p>
+              <strong>Frecuencia Cardiaca:</strong>
+              {{ triaje.frecuenciaCardiaca }} bpm
+            </p>
+            <p>
+              <strong>Frecuencia Respiratoria:</strong>
+              {{ triaje.frecuenciaRespiratoria }} rpm
+            </p>
+            <p>
+              <strong>Saturación de Oxígeno:</strong>
+              {{ triaje.saturacionOxigeno }}%
+            </p>
+            <p><strong>Peso:</strong> {{ triaje.peso }} kg</p>
+            <p><strong>Altura:</strong> {{ triaje.altura }} m</p>
+            <p><strong>Síntomas:</strong> {{ triaje.sintomas || "Ninguno" }}</p>
+            <p>
+              <strong>Estado Mental:</strong>
+              {{ triaje.estadoMental || "No especificado" }}
+            </p>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingTriajes && triajes.length === 0">
+          <p>No se encontraron triajes para este usuario.</p>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <!-- Diagnósticos -->
+  <div class="historial-section">
+    <h3 (click)="toggleSection('diagnosticos')">Consultas y Diagnósticos</h3>
+    <nz-spin [nzSpinning]="isLoadingDiagnosticos">
+      <div *ngIf="seccionesVisibles['diagnosticos']">
+        <div *ngIf="consultasDiagnosticos && consultasDiagnosticos.length > 0">
+          <div *ngFor="let item of consultasDiagnosticos" class="consulta-item">
+            <p><strong>Consulta ID:</strong> {{ item.consulta.id }}</p>
+            <p>
+              <strong>Fecha:</strong>
+              {{ item.consulta.fechaConsulta | date : "dd-MM-yyyy HH:mm" }}
+            </p>
+            <p>
+              <strong>Motivo:</strong>
+              {{ item.consulta.motivoConsulta || "Sin motivo registrado" }}
+            </p>
+
+            <div *ngIf="item.diagnostico; else noDiagnostico">
+              <p>
+                <strong>Diagnóstico:</strong>
+                {{ item.diagnostico.tipoDiagnostico }}
+              </p>
+              <p><strong>Síntomas:</strong> {{ item.diagnostico.sintomas }}</p>
+              <p>
+                <strong>Observaciones:</strong>
+                {{ item.diagnostico.observaciones }}
+              </p>
+            </div>
+
+            <ng-template #noDiagnostico>
+              <p><em>Sin diagnóstico registrado.</em></p>
+            </ng-template>
+          </div>
+        </div>
+        <div
+          *ngIf="!isLoadingDiagnosticos && consultasDiagnosticos.length === 0"
+        >
+          <p>No se encontraron consultas con diagnósticos para este usuario.</p>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <!-- Recetas -->
+  <div class="historial-section">
+    <h3 (click)="toggleSection('recetas')">Recetas</h3>
+    <nz-spin [nzSpinning]="isLoadingRecetas">
+      <div *ngIf="seccionesVisibles['recetas']">
+        <div *ngIf="recetasConConsulta && recetasConConsulta.length > 0">
+          <div *ngFor="let recetaItem of recetasConConsulta" class="receta-item">
+            <p><strong>Consulta ID:</strong> {{ recetaItem.consulta.id }}</p>
+            <p><strong>Fecha de Consulta:</strong> {{ recetaItem.consulta.fechaConsulta | date: 'dd-MM-yyyy HH:mm' }}</p>
+            <p><strong>Motivo de Consulta:</strong> {{ recetaItem.consulta.motivoConsulta || 'Sin motivo registrado' }}</p>
+            
+            <div *ngIf="recetaItem.receta; else noReceta">
+              <p><strong>Fecha de Receta:</strong> {{ recetaItem.receta.fecha | date: 'dd-MM-yyyy HH:mm' }}</p>
+              <p><strong>Medicamentos:</strong></p>
+              <ul>
+                <li *ngFor="let medicamento of recetaItem.receta.medicamentos">
+                  {{ medicamento.nombre }} - {{ medicamento.dosis }} - {{ medicamento.instrucciones }}
+                </li>
+              </ul>
+            </div>
+  
+            <ng-template #noReceta>
+              <p><em>No se encontró receta para esta consulta.</em></p>
+            </ng-template>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingRecetas && recetasConConsulta.length === 0">
+          <p>No se encontraron recetas relacionadas con este usuario.</p>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+  
+</div>
