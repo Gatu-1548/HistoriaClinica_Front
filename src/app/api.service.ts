@@ -15,7 +15,7 @@ import { jwtDecode } from 'jwt-decode'; // Corrige el import de jwtDecode
   providedIn: 'root',
 })
 export class ApiService {
-   private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
+  private baseUrl = 'https://backend-historialclinico.onrender.com'; // URL base de tu backend
   //private baseUrl = 'http://localhost:8080';
   constructor(private http: HttpClient) {} // Asegúrate de que HttpClient sea parte del constructor
 
@@ -598,5 +598,14 @@ export class ApiService {
   generarReporte(config: any): Observable<Blob> {
     const url = `${this.baseUrl}/auth/reportes/medicos`;
     return this.http.post(url, config, { responseType: 'blob' });
+  }
+
+  // Método para actualizar el estado de una cita
+  updateCitaEstado(citaId: number, nuevoEstado: string): Observable<any> {
+    const url = `http://localhost:8080/auth/citas/actualizar-estado/${citaId}`;
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    return this.http.patch(url, nuevoEstado, { headers });
   }
 }

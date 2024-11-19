@@ -22,6 +22,7 @@ import { VerAntecedentesComponent } from './atenciones/ver-antecedentes/ver-ante
 import { ManageAtencionesMedicoComponent } from './atenciones/manage-atenciones-medico/manage-atenciones-medico.component';
 import { ConsultaMedicaComponent } from './atenciones/consulta-medica/consulta-medica.component';
 import { RecepcionSolicitudesAnalisisComponent } from './atenciones/recepcion-solicitudes-analisis/recepcion-solicitudes-analisis.component';
+import { ManagePagosComponent } from './manage-pagos/manage-pagos.component';
 export const routes: Routes = [
   // Ruta para el HomeComponent sin navbar
   { path: '', component: HomeComponent },

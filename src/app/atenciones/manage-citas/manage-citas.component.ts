@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { Cita } from '../../models/citas.model';
 import { formatDate } from '@angular/common';
-
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,36 +10,39 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
-
 @Component({
   selector: 'app-manage-citas',
   standalone: true,
-  imports: [ CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     NzModalModule,
     NzButtonModule,
     NzIconModule,
     NzInputModule,
-    NzSelectModule,
+    NzSelectModule
   ],
   templateUrl: './manage-citas.component.html',
-  styleUrl: './manage-citas.component.css'
+  styleUrls: ['./manage-citas.component.css']
 })
-export class ManageCitasComponent {
+export class ManageCitasComponent implements OnInit {
   citas: Cita[] = [];
   citasFiltradas: Cita[] = [];
   selectedDate: string | null = null;
-  selectedEstado: string | null = 'activa';
+  selectedEstado: string | null = 'pendiente';
   isLoading: boolean = false;
-  isModalVisible = false;
+  isModalVisible = false; // Controla el modal de detalles de la cita
+  isPagoModalVisible = false; // Controla el modal de pagos
+  isQrVisible = false; // Controla el modal de QR
   selectedCita: Cita | null = null;
+
+  stripeUrl: string = 'https://buy.stripe.com/test_00g8Af2Imh0p7q8288'; // URL de Stripe
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     const today = new Date();
     this.selectedDate = formatDate(today, 'yyyy-MM-dd', 'en');
-    this.selectedEstado = 'pendiente';
     this.loadCitas();
   }
 
@@ -82,15 +84,37 @@ export class ManageCitasComponent {
     this.isModalVisible = false;
   }
 
+  showPagoModal(): void {
+    console.log("Abriendo modal de pagos");
+    this.isPagoModalVisible = true;
+  }
+
+  handlePagoCancel(): void {
+    console.log("Cerrando modal de pagos");
+    this.isPagoModalVisible = false;
+  }
+
+  redirectToStripe() {
+    window.open(this.stripeUrl, '_blank');
+  }
+
+  showQrModal(): void {
+    this.isQrVisible = true;
+  }
+
+  handleQrCancel(): void {
+    this.isQrVisible = false;
+  }
+
   cancelarCita(id: number | undefined) {
     if (!id) return;
-  
+
     if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
       this.apiService.cancelarCita(id).subscribe(
         () => {
           alert('Cita cancelada exitosamente.');
-          this.loadCitas(); // Recargar las citas para actualizar el estado
-          this.isModalVisible = false; // Cerrar el modal
+          this.loadCitas();
+          this.isModalVisible = false;
         },
         (error) => {
           console.error('Error al cancelar la cita:', error);
@@ -99,5 +123,18 @@ export class ManageCitasComponent {
       );
     }
   }
-  
+  // Método para actualizar el estado de una cita
+updateCitaEstado(citaId: number, nuevoEstado: string) {
+  this.apiService.updateCitaEstado(citaId, nuevoEstado).subscribe({
+    next: (response) => {
+      console.log('Estado de la cita actualizado:', response);
+      alert('Estado actualizado exitosamente');
+      this.loadCitas(); // Recargar la lista de citas
+    },
+    error: (error) => {
+      console.error('Error al actualizar el estado de la cita:', error);
+      alert('Hubo un problema al actualizar el estado');
+    }
+  });
+}
 }

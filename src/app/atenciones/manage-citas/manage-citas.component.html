@@ -1,105 +1,120 @@
 <div class="citas-container">
-    <h2>Gestión de Citas</h2>
-  
-    <!-- Filtros -->
-    <div class="filters-container">
-      <div class="form-group">
-        <label>Selecciona una Fecha:</label>
-        <input
-          nz-input
-          type="date"
-          [(ngModel)]="selectedDate"
-          (ngModelChange)="filterCitas()"
-        />
-      </div>
-  
-      <div class="form-group">
-        <label>Estado de la Cita:</label>
-        <nz-select
-          [(ngModel)]="selectedEstado"
-          (ngModelChange)="filterCitas()"
-          nzPlaceHolder="Filtrar por estado"
-          style="width: 100%"
-        >
-          <nz-option [nzValue]="null" nzLabel="Todos"></nz-option>
-          <nz-option nzValue="pendiente" nzLabel="Pendientes"></nz-option>
-          <nz-option nzValue="cancelada" nzLabel="Canceladas"></nz-option>
-          <nz-option nzValue="atentido" nzLabel="Atendido"></nz-option>
-        </nz-select>
-      </div>
-    </div>
-  
-    <!-- Tabla de citas -->
-    <div class="table-container">
-      <table *ngIf="citasFiltradas.length > 0">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Hora Inicio</th>
-            <th>Estado</th>
-            <th>Precio</th>
-            <th>Usuario</th>
-            <th>Médico</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let cita of citasFiltradas">
-            <td>{{ cita.id }}</td>
-            <td>{{ cita.fecha | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ cita.horaInicio  }}</td>
-            <td>{{ cita.estado }}</td>
-            <td>{{ cita.precio | currency }}</td>
-            <td>{{ cita.user.nombre }} {{ cita.user.apellido_paterno }} {{ cita.user.apellido_materno }}</td>
-            <td>{{ cita.medico.user.nombre }} {{ cita.medico.user.apellido_paterno }} {{ cita.medico.user.apellido_materno }}</td>
+  <h2>Gestión de Citas</h2>
 
-            <td>
-              <button nz-button nzType="default" (click)="viewCitaDetails(cita)">
-                <span nz-icon nzType="eye"></span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Indicador de carga -->
-      <div *ngIf="isLoading" class="loading-indicator">
-          <p>Cargando citas...</p>
-      </div>
-      
-      <!-- Mensaje si no hay citas -->
-      <div *ngIf="citasFiltradas.length === 0 && !isLoading">
-        No hay citas disponibles para los filtros seleccionados.
-      </div>
+  <!-- Filtros -->
+  <div class="filters-container">
+    <div class="form-group">
+      <label>Selecciona una Fecha:</label>
+      <input nz-input type="date" [(ngModel)]="selectedDate" (ngModelChange)="filterCitas()" />
     </div>
   
-    <!-- Modal de detalles de la cita -->
-    <nz-modal
-      [(nzVisible)]="isModalVisible"
-      nzTitle="Detalles de la Cita"
-      (nzOnCancel)="handleCancel()"
-      (nzOnOk)="handleOk()"
-    >
-      <div *nzModalContent>
-        <p><strong>Fecha:</strong> {{ selectedCita?.fecha }}</p>
-        <p><strong>Hora de Inicio:</strong> {{ selectedCita?.horaInicio }}</p>
-        <p><strong>Estado:</strong> {{ selectedCita?.estado }}</p>
-        <p><strong>Precio:</strong> {{ selectedCita?.precio | currency }}</p>
-        <p><strong>Usuario:</strong> {{ selectedCita?.user?.nombre }} {{ selectedCita?.user?.apellido_paterno }} {{ selectedCita?.user?.apellido_materno }}</p>
-        <p><strong>Médico:</strong> {{ selectedCita?.medico?.user?.nombre }} {{ selectedCita?.medico?.user?.apellido_paterno }} {{ selectedCita?.medico?.user?.apellido_materno }}</p>
-  
-        <!-- Botón para cancelar la cita -->
-        <button
-          *ngIf="selectedCita?.estado !== 'cancelada'"
-          nz-button
-          nzType="default"
-          nzDanger
-          (click)="cancelarCita(selectedCita?.id)"
-        >
-          Cancelar Cita
-        </button>
-      </div>
-    </nz-modal>
+    <div class="form-group">
+      <label>Estado de la Cita:</label>
+      <nz-select
+        [(ngModel)]="selectedEstado"
+        (ngModelChange)="filterCitas()"
+        nzPlaceHolder="Filtrar por estado"
+        style="width: 100%"
+      >
+        <nz-option [nzValue]="null" nzLabel="Todos"></nz-option>
+        <nz-option nzValue="pendiente" nzLabel="Pendientes"></nz-option>
+        <nz-option nzValue="cancelada" nzLabel="Canceladas"></nz-option>
+        <nz-option nzValue="atentido" nzLabel="Atendido"></nz-option>
+      </nz-select>
+    </div>
   </div>
+
+  <!-- Tabla de citas -->
+  <div class="table-container">
+    <table *ngIf="citasFiltradas.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora Inicio</th>
+          <th>Estado</th>
+          <th>Precio</th>
+          <th>Usuario</th>
+          <th>Médico</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cita of citasFiltradas">
+          <td>{{ cita.id }}</td>
+          <td>{{ cita.fecha | date: 'yyyy-MM-dd' }}</td>
+          <td>{{ cita.horaInicio }}</td>
+          <td>
+            <!-- Selector para cambiar el estado -->
+            <nz-select [(ngModel)]="cita.estado" (ngModelChange)="updateCitaEstado(cita.id, $event)" style="width: 100px;">
+              <nz-option nzValue="pendiente" nzLabel="Pendiente"></nz-option>
+              <nz-option nzValue="cancelada" nzLabel="Cancelada"></nz-option>
+              <nz-option nzValue="completada" nzLabel="Completada"></nz-option>
+              <nz-option nzValue="Listo para Consulta" nzLabel="Listo para Consulta"></nz-option>
+            </nz-select>
+          </td>
+          <td>{{ cita.precio | currency }}</td>
+          <td>{{ cita.user.nombre }} {{ cita.user.apellido_paterno }} {{ cita.user.apellido_materno }}</td>
+          <td>{{ cita.medico.user.nombre }} {{ cita.medico.user.apellido_paterno }} {{ cita.medico.user.apellido_materno }}</td>
+          <td>
+            <!-- Botón para ver detalles -->
+            <button nz-button nzType="default" (click)="viewCitaDetails(cita)">
+              <span nz-icon nzType="eye"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   
+    <!-- Indicador de carga -->
+    <div *ngIf="isLoading" class="loading-indicator">
+        <p>Cargando citas...</p>
+    </div>
+    
+    <!-- Mensaje si no hay citas -->
+    <div *ngIf="citasFiltradas.length === 0 && !isLoading">
+      No hay citas disponibles para los filtros seleccionados.
+    </div>
+  </div>
+
+  <!-- Modal de detalles de la cita -->
+  <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Detalles de la Cita" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <div *nzModalContent>
+      <p><strong>Fecha:</strong> {{ selectedCita?.fecha }}</p>
+      <p><strong>Hora de Inicio:</strong> {{ selectedCita?.horaInicio }}</p>
+      <p><strong>Estado:</strong> {{ selectedCita?.estado }}</p>
+      <p><strong>Precio:</strong> {{ selectedCita?.precio | currency }}</p>
+      <p><strong>Usuario:</strong> {{ selectedCita?.user?.nombre }} {{ selectedCita?.user?.apellido_paterno }} {{ selectedCita?.user?.apellido_materno }}</p>
+      <p><strong>Médico:</strong> {{ selectedCita?.medico?.user?.nombre }} {{ selectedCita?.medico?.user?.apellido_paterno }} {{ selectedCita?.medico?.user?.apellido_materno }}</p>
+
+      <button *ngIf="selectedCita?.estado !== 'cancelada'" nz-button nzType="default" nzDanger (click)="cancelarCita(selectedCita?.id)">
+        Cancelar Cita
+      </button>
+
+      <!-- Botón para abrir el modal de pagos -->
+      <button nz-button nzType="primary" (click)="showPagoModal()" style="margin-top: 10px;">
+        Pagar
+      </button>
+    </div>
+  </nz-modal>
+
+  <!-- Modal de Pagos -->
+  <nz-modal [(nzVisible)]="isPagoModalVisible" nzTitle="Realizar Pago" (nzOnCancel)="handlePagoCancel()" [nzFooter]="null" nzWidth="400">
+    <div style="text-align: center;">
+     <div *nzModalContent>
+      <h2>Opciones de Pago</h2>
+      <button nz-button nzType="primary" (click)="redirectToStripe()">Pagar con Tarjeta</button>
+      <button nz-button nzType="default" (click)="showQrModal()">Pagar con QR</button>
+
+      <!-- Modal de QR en línea dentro del contenido -->
+      <nz-modal [(nzVisible)]="isQrVisible" nzTitle="Escanea el código QR para pagar" (nzOnCancel)="handleQrCancel()" [nzFooter]="null">
+        <div style="text-align: center;">
+          <div *nzModalContent>
+          <img src="assets/images/qr.jpg" alt="Código QR de Pago" width="200" height="200">
+        </div>
+        </div>
+      </nz-modal>
+    </div>
+  </div>
+  </nz-modal>
+</div>
