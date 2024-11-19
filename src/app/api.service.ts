@@ -446,6 +446,7 @@ getUsuariosConSeguro(): Observable<any> {
     if (!query.trim()) {
       return of([]); // Si la búsqueda está vacía, retorna un array vacío
     }
+    
 
     const params = new HttpParams().set('name', query);
 
@@ -565,5 +566,12 @@ getOrdenesPendientes(): Observable<any[]> {
   return this.http.get<any[]>(`${this.baseUrl}/auth/ordenes/pendientes`);
 }
 
-
+// Método para actualizar el estado de una cita
+updateCitaEstado(citaId: number, nuevoEstado: string): Observable<any> {
+  const url = `http://localhost:8080/auth/citas/actualizar-estado/${citaId}`;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  return this.http.patch(url, nuevoEstado, { headers });
+}
 }

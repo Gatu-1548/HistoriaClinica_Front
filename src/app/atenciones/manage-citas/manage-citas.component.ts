@@ -123,4 +123,18 @@ export class ManageCitasComponent implements OnInit {
       );
     }
   }
+  // Método para actualizar el estado de una cita
+updateCitaEstado(citaId: number, nuevoEstado: string) {
+  this.apiService.updateCitaEstado(citaId, nuevoEstado).subscribe({
+    next: (response) => {
+      console.log('Estado de la cita actualizado:', response);
+      alert('Estado actualizado exitosamente');
+      this.loadCitas(); // Recargar la lista de citas
+    },
+    error: (error) => {
+      console.error('Error al actualizar el estado de la cita:', error);
+      alert('Hubo un problema al actualizar el estado');
+    }
+  });
+}
 }

@@ -44,11 +44,20 @@
           <td>{{ cita.id }}</td>
           <td>{{ cita.fecha | date: 'yyyy-MM-dd' }}</td>
           <td>{{ cita.horaInicio }}</td>
-          <td>{{ cita.estado }}</td>
+          <td>
+            <!-- Selector para cambiar el estado -->
+            <nz-select [(ngModel)]="cita.estado" (ngModelChange)="updateCitaEstado(cita.id, $event)" style="width: 100px;">
+              <nz-option nzValue="pendiente" nzLabel="Pendiente"></nz-option>
+              <nz-option nzValue="cancelada" nzLabel="Cancelada"></nz-option>
+              <nz-option nzValue="completada" nzLabel="Completada"></nz-option>
+              <nz-option nzValue="Listo para Consulta" nzLabel="Listo para Consulta"></nz-option>
+            </nz-select>
+          </td>
           <td>{{ cita.precio | currency }}</td>
           <td>{{ cita.user.nombre }} {{ cita.user.apellido_paterno }} {{ cita.user.apellido_materno }}</td>
           <td>{{ cita.medico.user.nombre }} {{ cita.medico.user.apellido_paterno }} {{ cita.medico.user.apellido_materno }}</td>
           <td>
+            <!-- Botón para ver detalles -->
             <button nz-button nzType="default" (click)="viewCitaDetails(cita)">
               <span nz-icon nzType="eye"></span>
             </button>
